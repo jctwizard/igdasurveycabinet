@@ -34,7 +34,7 @@ function showStatus()
       console.log(snapshot.val());
     });
 
-    console.log("updated");
+    console.log("updated again");
   }
   else
   {
