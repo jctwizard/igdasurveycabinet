@@ -30,7 +30,7 @@ function showStatus()
     database = firebase.database();
 
     // Read survey data
-    firebase.database().ref("/surveys/").once('value').then(function(data) {
+    firebase.database().ref("/igda-survey-arcade").once("value").then(function(data) {
       console.log("output data: ");
       console.log(data.val());
     });
