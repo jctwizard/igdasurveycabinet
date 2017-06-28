@@ -1,10 +1,15 @@
-if (navigator.onLine)
+document.getElementById("status").innerHTML = "starting up...";
+
+function showStatus()
 {
-  document.getElementById("status").innerHtml = "online";
-  console.log("online");
-}
-else
-{
-  document.getElementById("status").innerHtml = "offline";
-  console.log("offline");
+  if (navigator.onLine)
+  {
+    document.getElementById("status").innerHTML = "online";
+    console.log("online");
+  }
+  else
+  {
+    document.getElementById("status").innerHTML = "offline";
+    console.log("offline");
+  }
 }
