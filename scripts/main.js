@@ -30,9 +30,11 @@ function showStatus()
     database = firebase.database();
 
     // Read survey data
-    firebase.database().ref("surveys").once('value').then(function(snapshot) {
+    firebase.database().ref().once('value').then(function(snapshot) {
       console.log(snapshot.val());
     });
+
+    console.log("updated");
   }
   else
   {
