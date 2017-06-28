@@ -11,10 +11,14 @@
   <link rel="stylesheet" href="styles/main.css">
 </head>
 
-<body onload="showStatus()">
+<body onload="init()">
   <div>Welcome to Survey Arcade!</div>
   <hr />
   <div id="status">unknown</div>
+
+  <button onclick="displaySurveys()">Display Surveys</button>
+
+  <div id="surveyList">surveys go here...</div>
 
   <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase-auth.js"></script>
