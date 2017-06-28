@@ -30,14 +30,17 @@ function showStatus()
     database = firebase.database();
 
     // Read survey data
-    firebase.database().ref("/igda-survey-arcade").once("value").then(function(data) {
+    firebase.database().ref().once("value").then(function(data) {
       console.log("output data: ");
       console.log(data.val());
     });
+
+    console.log(firebase.database().ref().toString());
   }
   else
   {
     document.getElementById("status").innerHTML = "offline";
     console.log("offline");
+    window.localStorage.setItem("key", "my data");
   }
 }
