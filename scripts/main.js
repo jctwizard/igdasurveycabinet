@@ -72,7 +72,7 @@ function displaySurveys()
   {
     var surveyRow = makeElement(surveyPanel, "div", "", "surveyRow", surveyIndex.toString());
 
-    var surveyTitle = makeElement(surveyRow, "span", surveyNames[surveyIndex], "surveyTitle", surveyIndex.toString());
+    var surveyTitle = makeElement(surveyRow, "span", surveys[surveyNames[surveyIndex]].surveyName, "surveyTitle", surveyIndex.toString());
 
     var surveyEditButton = makeElement(surveyRow, "button", "edit survey", "surveyEditButton", surveyIndex.toString());
     surveyEditButton.setAttribute("onclick", "editSurvey(" + surveyIndex.toString() + ")");
@@ -97,17 +97,17 @@ function editSurvey(surveyIndex)
 
   var surveyNames = Object.keys(surveys);
 
-  var surveyHeader = makeElement(editorPanel, "input", surveyNames[surveyIndex], "surveyHeader", surveyIndex.toString());
+  var surveyHeader = makeElement(editorPanel, "input", surveys[surveyNames[surveyIndex]].surveyName, "surveyHeader", surveyIndex.toString());
 
   var questionPanel = makeElement(editorPanel, "div", "", "questionPanel", "")
 
-  var questionNames = Object.keys(surveys[surveyNames[surveyIndex]]);
+  var questionNames = Object.keys(surveys[surveyNames[surveyIndex]].questions);
 
   for (var questionIndex = 0; questionIndex < questionNames.length; questionIndex++)
   {
     var questionRow = makeElement(questionPanel, "div", "", "questionRow", questionIndex.toString());
 
-    var questionTitle = makeElement(questionRow, "span", questionNames[questionIndex], "questionTitle", questionIndex.toString());
+    var questionTitle = makeElement(questionRow, "span", surveys[surveyNames[surveyIndex]].questions[questionNames[questionIndex]].questionName, "questionTitle", questionIndex.toString());
 
     var questionEditButton = makeElement(questionRow, "button", "edit question", "questionEditButton", questionIndex.toString());
     questionEditButton.setAttribute("onclick", "editQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
@@ -132,19 +132,19 @@ function editQuestion(surveyIndex, questionIndex)
     editorPanel.innerHTML = "";
 
     var surveyNames = Object.keys(surveys);
-    var questionNames = Object.keys(surveys[surveyNames[surveyIndex]]);
+    var questionNames = Object.keys(surveys[surveyNames[surveyIndex]].questions);
 
-    var questionHeader = makeElement(editorPanel, "input", questionNames[questionIndex], "questionHeader", questionIndex.toString());
+    var questionHeader = makeElement(editorPanel, "input", surveys[surveyNames[surveyIndex]].questions[questionNames[questionIndex]].questionName, "questionHeader", questionIndex.toString());
 
     var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
 
-    var answerNames = Object.keys(surveys[surveyNames[surveyIndex]][questionNames[questionIndex]]);
+    var answerNames = Object.keys(surveys[surveyNames[surveyIndex]].questions[questionNames[questionIndex]].answers);
 
     for (var answerIndex = 0; answerIndex < answerNames.length; answerIndex++)
     {
       var answerRow = makeElement(answerPanel, "div", "", "answerRow", answerIndex.toString());
 
-      var answerTitle = makeElement(answerRow, "input", answerNames[answerIndex], "answerTitle", answerIndex.toString());
+      var answerTitle = makeElement(answerRow, "input", surveys[surveyNames[surveyIndex]].questions[questionNames[questionIndex]].answers[answerNames[answerIndex]].answerName, "answerTitle", answerIndex.toString());
     }
 
     var addAnswerButton = makeElement(editorPanel, "button", "add answer", "addAnswerButton", "");
@@ -176,7 +176,9 @@ function addSurvey()
   var surveyResultsButton = makeElement(surveyRow, "button", "view results", "surveyResultsButton", surveyIndex.toString());
   surveyResultsButton.setAttribute("onclick", "viewSurveyResults(" + surveyIndex.toString() + ")");
 
-  //editSurvey(surveyIndex);
+  surveys["survey" + surveyIndex.toString()] = { "surveyName":"new survey", "questions": {}};
+
+  editSurvey(surveyIndex);
 }
 
 function addQuestion(surveyIndex)
@@ -193,7 +195,9 @@ function addQuestion(surveyIndex)
   var questionEditButton = makeElement(questionRow, "button", "edit question", "questionEditButton", questionIndex.toString());
   questionEditButton.setAttribute("onclick", "editQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
 
-  //editQuestion(surveyIndex, questionIndex);
+  surveys[surveyNames[surveyIndex]].questions["question" + questionIndex.toString()] = { "questionName":"new question", "answers": {}};
+
+  editQuestion(surveyIndex, questionIndex);
 }
 
 function addAnswer(surveyIndex, questionIndex)
@@ -207,6 +211,8 @@ function addAnswer(surveyIndex, questionIndex)
   var answerRow = makeElement(answerPanel, "div", "", "answerRow", answerIndex.toString());
 
   var answerTitle = makeElement(answerRow, "input", "enter answer here", "answerTitle", answerIndex.toString());
+
+  surveys[surveyNames[surveyIndex]].questions[questionNames[questionIndex]].answers["answer" + answerIndex.toString()] = { "answerName":"enter answer here", "responses":0 };
 }
 
 function saveSurvey(surveyIndex)
