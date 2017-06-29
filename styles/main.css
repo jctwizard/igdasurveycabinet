@@ -1,8 +1,88 @@
 body
 {
   font-family: monospace;
-  font-size: 3em;
+  font-size: 1em;
   color: red;
   background-color: black;
   font-style: italic;
+}
+
+.surveyRow
+{
+
+}
+
+.surveyTitle
+{
+  font-size: 3em;
+}
+
+.surveyEditButton
+{
+
+}
+
+.surveyRunButton
+{
+
+}
+
+.surveyResultsButton
+{
+  
+}
+
+.surveyHeader
+{
+  font-size: 3em;
+}
+
+.questionRow
+{
+
+}
+
+.questionTitle
+{
+  font-size: 2em;
+}
+
+.questionEditButton
+{
+
+}
+
+.surveyCancelButton
+{
+
+}
+
+.surveySaveButton
+{
+
+}
+
+.questionHeader
+{
+  font-size: 3em;
+}
+
+.answerRow
+{
+
+}
+
+.answerTitle
+{
+  font-size: 2em;
+}
+
+.questionCancelButton
+{
+
+}
+
+.questionSaveButton
+{
+
 }
