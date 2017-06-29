@@ -7,6 +7,11 @@ body
   font-style: italic;
 }
 
+#editorPanel
+{
+  
+}
+
 .surveyRow
 {
 
@@ -29,7 +34,7 @@ body
 
 .surveyResultsButton
 {
-  
+
 }
 
 .surveyHeader

@@ -45,7 +45,7 @@ function init()
   }
 }
 
-function makeElement(type, name, suffix, content, parent)
+function makeElement(parent, type, content, name, suffix)
 {
   var newElement = document.createElement(type);
 
@@ -61,55 +61,65 @@ function makeElement(type, name, suffix, content, parent)
 
 function displaySurveys()
 {
-  var surveyList = document.getElementById("surveyList");
+  var editorPanel = document.getElementById("editorPanel");
   var surveyNames = Object.keys(surveys);
 
-  surveyList.innerHTML = "";
+  editorPanel.innerHTML = "";
+
+  var surveyPanel = makeElement(editorPanel, "div", "", "surveyPanel", "");
 
   for (var surveyIndex = 0; surveyIndex < surveyNames.length; surveyIndex++)
   {
-    var surveyRow = makeElement("div", "surveyRow", surveyIndex.toString(), "", surveyList);
+    var surveyRow = makeElement(surveyPanel, "div", "", "surveyRow", surveyIndex.toString());
 
-    var surveyTitle = makeElement("span", "surveyTitle", surveyIndex.toString(), surveyNames[surveyIndex], surveyRow);
+    var surveyTitle = makeElement(surveyRow, "span", surveyNames[surveyIndex], "surveyTitle", surveyIndex.toString());
 
-    var surveyEditButton = makeElement("button", "surveyEditButton", surveyIndex.toString(), "edit survey", surveyRow);
+    var surveyEditButton = makeElement(surveyRow, "button", "edit survey", "surveyEditButton", surveyIndex.toString());
     surveyEditButton.setAttribute("onclick", "editSurvey(" + surveyIndex.toString() + ")");
 
-    var surveyRunButton = makeElement("button", "surveyRunButton", surveyIndex.toString(), "run survey", surveyRow);
+    var surveyRunButton = makeElement(surveyRow, "button", "run survey", "surveyRunButton", surveyIndex.toString());
     surveyRunButton.setAttribute("onclick", "runSurvey(" + surveyIndex.toString() + ")");
 
-    var surveyResultsButton = makeElement("button", "surveyResultsButton", surveyIndex.toString(), "view results", surveyRow);
+    var surveyResultsButton = makeElement(surveyRow, "button", "view results", "surveyResultsButton", surveyIndex.toString());
     surveyResultsButton.setAttribute("onclick", "viewSurveyResults(" + surveyIndex.toString() + ")");
   }
+
+  var addSurveyButton = makeElement(editorPanel, "button", "add survey", "addSurveyButton", "");
+  addSurveyButton.setAttribute("onclick", "addSurvey()");
 }
 
 function editSurvey(surveyIndex)
 {
   activeSurveyIndex = surveyIndex;
 
-  var surveyList = document.getElementById("surveyList");
-  surveyList.innerHTML = "";
+  var editorPanel = document.getElementById("editorPanel");
+  editorPanel.innerHTML = "";
 
   var surveyNames = Object.keys(surveys);
 
-  var surveyHeader = makeElement("input", "surveyHeader", surveyIndex.toString(), surveyNames[surveyIndex], surveyList);
+  var surveyHeader = makeElement(editorPanel, "input", surveyNames[surveyIndex], "surveyHeader", surveyIndex.toString());
+
+  var questionPanel = makeElement(editorPanel, "div", "", "questionPanel", "")
 
   var questionNames = Object.keys(surveys[surveyNames[surveyIndex]]);
 
   for (var questionIndex = 0; questionIndex < questionNames.length; questionIndex++)
   {
-    var questionRow = makeElement("div", "questionRow", questionIndex.toString(), "", surveyList);
+    var questionRow = makeElement(questionPanel, "div", "", "questionRow", questionIndex.toString());
 
-    var questionTitle = makeElement("span", "questionTitle", questionIndex.toString(), questionNames[questionIndex], questionRow);
+    var questionTitle = makeElement(questionRow, "span", questionNames[questionIndex], "questionTitle", questionIndex.toString());
 
-    var questionEditButton = makeElement("button", "questionEditButton", questionIndex.toString(), "edit question", questionRow);
+    var questionEditButton = makeElement(questionRow, "button", "edit question", "questionEditButton", questionIndex.toString());
     questionEditButton.setAttribute("onclick", "editQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
   }
 
-  var surveyCancelButton = makeElement("button", "surveyCancelButton", surveyIndex.toString(), "cancel edit", surveyList);
+  var addQuestionButton = makeElement(editorPanel, "button", "add question", "addQuestionButton", "");
+  addQuestionButton.setAttribute("onclick", "addQuestion(" + surveyIndex.toString() + ")");
+
+  var surveyCancelButton = makeElement(editorPanel, "button", "cancel edit", "surveyCancelButton", surveyIndex.toString());
   surveyCancelButton.setAttribute("onclick", "displaySurveys()");
 
-  var surveySaveButton = makeElement("button", "surveySaveButton", surveyIndex.toString(), "save survey", surveyList);
+  var surveySaveButton = makeElement(editorPanel, "button", "save survey", "surveySaveButton", surveyIndex.toString());
   surveySaveButton.setAttribute("onclick", "saveSurvey(" + surveyIndex.toString() + ")");
 }
 
@@ -117,29 +127,86 @@ function editQuestion(surveyIndex, questionIndex)
 {
     activeQuestionIndex = questionIndex;
 
-    var surveyList = document.getElementById("surveyList");
+    var editorPanel = document.getElementById("editorPanel");
 
-    surveyList.innerHTML = "";
+    editorPanel.innerHTML = "";
 
     var surveyNames = Object.keys(surveys);
     var questionNames = Object.keys(surveys[surveyNames[surveyIndex]]);
 
-    var questionHeader = makeElement("input", "questionHeader", questionIndex.toString(), questionNames[questionIndex], surveyList);
+    var questionHeader = makeElement(editorPanel, "input", questionNames[questionIndex], "questionHeader", questionIndex.toString());
+
+    var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
 
     var answerNames = Object.keys(surveys[surveyNames[surveyIndex]][questionNames[questionIndex]]);
 
     for (var answerIndex = 0; answerIndex < answerNames.length; answerIndex++)
     {
-      var answerRow = makeElement("div", "answerRow", answerIndex.toString(), "", surveyList);
+      var answerRow = makeElement(answerPanel, "div", "", "answerRow", answerIndex.toString());
 
-      var answerTitle = makeElement("input", "answerTitle", answerIndex.toString(), answerNames[answerIndex], answerRow);
+      var answerTitle = makeElement(answerRow, "input", answerNames[answerIndex], "answerTitle", answerIndex.toString());
     }
 
-    var questionCancelButton = makeElement("button", "questionCancelButton", questionIndex.toString(), "cancel edit", surveyList);
+    var addAnswerButton = makeElement(editorPanel, "button", "add answer", "addAnswerButton", "");
+    addAnswerButton.setAttribute("onclick", "addAnswer(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
+
+    var questionCancelButton = makeElement(editorPanel, "button", "cancel edit", "questionCancelButton", questionIndex.toString());
     questionCancelButton.setAttribute("onclick", "editSurvey(" + surveyIndex.toString() + ")");
 
-    var questionSaveButton = makeElement("button", "questionSaveButton", questionIndex.toString(), "save question", surveyList);
+    var questionSaveButton = makeElement(editorPanel, "button", "save question", "questionSaveButton", questionIndex.toString());
     questionSaveButton.setAttribute("onclick", "saveQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
+}
+
+function addSurvey()
+{
+  var surveyPanel = document.getElementById("surveyPanel");
+  var surveyNames = Object.keys(surveys);
+  var surveyIndex = surveyNames.length;
+
+  var surveyRow = makeElement(surveyPanel, "div", "", "surveyRow", surveyIndex.toString());
+
+  var surveyTitle = makeElement(surveyRow, "span", "new survey", "surveyTitle", surveyIndex.toString());
+
+  var surveyEditButton = makeElement(surveyRow, "button", "edit survey", "surveyEditButton", surveyIndex.toString());
+  surveyEditButton.setAttribute("onclick", "editSurvey(" + surveyIndex.toString() + ")");
+
+  var surveyRunButton = makeElement(surveyRow, "button", "run survey", "surveyRunButton", surveyIndex.toString());
+  surveyRunButton.setAttribute("onclick", "runSurvey(" + surveyIndex.toString() + ")");
+
+  var surveyResultsButton = makeElement(surveyRow, "button", "view results", "surveyResultsButton", surveyIndex.toString());
+  surveyResultsButton.setAttribute("onclick", "viewSurveyResults(" + surveyIndex.toString() + ")");
+
+  //editSurvey(surveyIndex);
+}
+
+function addQuestion(surveyIndex)
+{
+  var questionPanel = document.getElementById("questionPanel");
+  var surveyNames = Object.keys(surveys);
+  var questionNames = Object.keys(surveys[surveyNames[surveyIndex]]);
+  var questionIndex = questionNames.length;
+
+  var questionRow = makeElement(questionPanel, "div", "", "questionRow", questionIndex.toString());
+
+  var questionTitle = makeElement(questionRow, "span", "new question", "questionTitle", questionIndex.toString());
+
+  var questionEditButton = makeElement(questionRow, "button", "edit question", "questionEditButton", questionIndex.toString());
+  questionEditButton.setAttribute("onclick", "editQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
+
+  //editQuestion(surveyIndex, questionIndex);
+}
+
+function addAnswer(surveyIndex, questionIndex)
+{
+  var answerPanel = document.getElementById("answerPanel");
+  var surveyNames = Object.keys(surveys);
+  var questionNames = Object.keys(surveys[surveyNames[surveyIndex]]);
+  var answerNames = Object.keys(surveys[surveyNames[surveyIndex]][questionNames[questionIndex]]);
+  var answerIndex = answerNames.length;
+
+  var answerRow = makeElement(answerPanel, "div", "", "answerRow", answerIndex.toString());
+
+  var answerTitle = makeElement(answerRow, "input", "enter answer here", "answerTitle", answerIndex.toString());
 }
 
 function saveSurvey(surveyIndex)
@@ -150,21 +217,6 @@ function saveSurvey(surveyIndex)
 function saveQuestion(surveyIndex, questionIndex)
 {
   editSurvey(surveyIndex);
-}
-
-function addSurvey()
-{
-
-}
-
-function addQuestion()
-{
-
-}
-
-function addAnswer()
-{
-
 }
 
 function runSurvey(surveyIndex)
