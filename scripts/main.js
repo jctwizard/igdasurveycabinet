@@ -467,7 +467,61 @@ function goOffline()
 
 function runSurvey(surveyIndex)
 {
-  
+  activeSurveyIndex = surveyIndex;
+  activeQuestionIndex = 0;
+
+  displayActiveQuestion();
+}
+
+function displayActiveQuestion()
+{
+  var surveyIndex = activeSurveyIndex;
+  var questionIndex = activeQuestionIndex;
+
+  var editorPanel = document.getElementById("editorPanel");
+  editorPanel.innerHTML = "";
+
+  var questionHeader = makeElement(editorPanel, "div", getQuestionName(surveyIndex, questionIndex), "questionHeader", questionIndex.toString());
+
+  var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
+
+  for (var answerIndex = 0; answerIndex < getAnswerCount(surveyIndex, questionIndex); answerIndex++)
+  {
+    var answerRemoveButton = makeElement(editorPanel, "button", getAnswerName(surveyIndex, questionIndex, answerIndex), "answerRemoveButton", answerIndex.toString());
+    answerRemoveButton.setAttribute("onclick", "saveResponse(" + answerIndex.toString() + ")");
+  }
+}
+
+function saveResponse(answerIndex)
+{
+  surveys["survey" + activeSurveyIndex.toString()].questions["question" + activeQuestionIndex.toString()].answers["answer" + answerIndex.toString()].responses += 1;
+
+  displayNextQuestion();
+}
+
+function displayNextQuestion()
+{
+  activeQuestionIndex += 1;
+
+  if (activeQuestionIndex >= getQuestionCount(activeSurveyIndex))
+  {
+    displayEndMessage();
+  }
+  else
+  {
+    displayActiveQuestion();
+  }
+}
+
+function displayEndMessage()
+{
+  var editorPanel = document.getElementById("editorPanel");
+  editorPanel.innerHTML = "thank you for completing the survey!";
+
+  syncSurvey(activeSurveyIndex, -1);
+
+  var backButton = makeElement(editorPanel, "button", "back", "backButton", activeSurveyIndex.toString());
+  backButton.setAttribute("onclick", "displaySurveys()");
 }
 
 function viewSurveyResults(surveyIndex)
