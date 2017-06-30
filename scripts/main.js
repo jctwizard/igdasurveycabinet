@@ -28,7 +28,7 @@ function init()
     firebase.initializeApp(config);
 
     // Authenticate user
-    firebase.auth().signInWithEmailAndPassword("jamie.ct.wood@gmail.com", "m1n1flam3").catch(function(error) {
+    firebase.auth().signInWithEmailAndPassword("igda@survey.cabinet", "videogames").catch(function(error) {
       console.log(error.code);
       console.log(error.message);
     });
@@ -181,6 +181,9 @@ function displaySurveys()
     var surveyEditButton = makeElement(surveyRow, "button", "edit survey", "surveyEditButton", surveyIndex.toString());
     surveyEditButton.setAttribute("onclick", "editSurvey(" + surveyIndex.toString() + ")");
 
+    var surveyDuplicateButton = makeElement(surveyRow, "button", "duplicate survey", "surveyDuplicateButton", surveyIndex.toString());
+    surveyDuplicateButton.setAttribute("onclick", "duplicateSurvey(" + surveyIndex.toString() + ")");
+
     var surveyRemoveButton = makeElement(surveyRow, "button", "remove survey", "surveyRemoveButton", surveyIndex.toString());
     surveyRemoveButton.setAttribute("onclick", "removeSurvey(" + surveyIndex.toString() + ")");
 
@@ -221,8 +224,14 @@ function editSurvey(surveyIndex)
     var questionEditButton = makeElement(questionRow, "button", "edit question", "questionEditButton", questionIndex.toString());
     questionEditButton.setAttribute("onclick", "editQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
 
-    var questionRemoveButton = makeElement(questionRow, "button", "remove question", "questionRemoveButton", questionIndex.toString());
-    questionRemoveButton.setAttribute("onclick", "removeQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
+    var questionDuplicateButton = makeElement(questionRow, "button", "duplicate question", "questionDuplicateButton", questionIndex.toString());
+    questionDuplicateButton.setAttribute("onclick", "duplicateQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
+
+    var questionShiftUpButton = makeElement(questionRow, "button", "shift up", "questionShiftUpButton", questionIndex.toString());
+    questionShiftUpButton.setAttribute("onclick", "shiftQuestionUp(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
+
+    var questionShiftDownButton = makeElement(questionRow, "button", "shift down", "questionShiftDownButton", questionIndex.toString());
+    questionShiftDownButton.setAttribute("onclick", "shiftQuestionDown(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
   }
 
   makeElement(editorPanel, "hr", "", "break", "");
@@ -254,8 +263,16 @@ function editQuestion(surveyIndex, questionIndex)
       var answerTitle = makeElement(answerRow, "input", getAnswerName(surveyIndex, questionIndex, answerIndex), "answerTitle", answerIndex.toString());
       answerTitle.setAttribute("onchange", "setAnswerName('" + answerTitle.id.toString() + "', " + surveyIndex.toString() + ", " + questionIndex.toString() + ", " + answerIndex.toString() + ")");
 
+      var answerResponses = makeElement(answerRow, "span", getAnswerResponses(surveyIndex, questionIndex, answerIndex), "answerResponses", answerIndex.toString());
+
       var answerRemoveButton = makeElement(answerRow, "button", "remove answer", "answerRemoveButton", answerIndex.toString());
       answerRemoveButton.setAttribute("onclick", "removeAnswer(" + surveyIndex.toString() + ", " + questionIndex.toString() + ", " + answerIndex.toString() + ")");
+
+      var answerShiftUpButton = makeElement(answerRow, "button", "shift up", "answerShiftUpButton", answerIndex.toString());
+      answerShiftUpButton.setAttribute("onclick", "shiftAnswerUp(" + surveyIndex.toString() + ", " + questionIndex.toString() + ", " + answerIndex.toString() + ")");
+
+      var answerShiftDownButton = makeElement(answerRow, "button", "shift down", "answerShiftDownButton", answerIndex.toString());
+      answerShiftDownButton.setAttribute("onclick", "shiftAnswerDown(" + surveyIndex.toString() + ", " + questionIndex.toString() + ", " + answerIndex.toString() + ")");
     }
 
     makeElement(editorPanel, "hr", "", "break", "");
@@ -289,11 +306,73 @@ function addSurvey()
   displaySurveys();
 }
 
+function duplicateSurvey(surveyIndex)
+{
+  surveys["survey" + getSurveyCount().toString()] = surveys["survey" + surveyIndex.toString()];
+
+  displaySurveys();
+}
+
 function addQuestion(surveyIndex)
 {
   surveys["survey" + surveyIndex.toString()].questions["question" + getQuestionCount(surveyIndex).toString()] = { "questionName":"new question", "answers":{"answer0":{"answerName":"new answer", "responses":0}}};
 
   editSurvey(surveyIndex);
+}
+
+function duplicateQuestion(surveyIndex, questionIndex)
+{
+  surveys["survey" + surveyIndex.toString()].questions["question" + getQuestionCount(surveyIndex).toString()] = surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()];
+
+  editSurvey(surveyIndex);
+}
+
+function shiftQuestionUp(surveyIndex, questionIndex)
+{
+  if (questionIndex > 0)
+  {
+    var questionContent = surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()];
+    surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()] = surveys["survey" + surveyIndex.toString()].questions["question" + (questionIndex - 1).toString()];
+    surveys["survey" + surveyIndex.toString()].questions["question" + (questionIndex - 1).toString()] = questionContent;
+
+    editSurvey(surveyIndex);
+  }
+}
+
+function shiftQuestionDown(surveyIndex, questionIndex)
+{
+  if (questionIndex < getQuestionCount(surveyIndex) - 1)
+  {
+    var questionContent = surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()];
+    surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()] = surveys["survey" + surveyIndex.toString()].questions["question" + (questionIndex + 1).toString()];
+    surveys["survey" + surveyIndex.toString()].questions["question" + (questionIndex + 1).toString()] = questionContent;
+
+    editSurvey(surveyIndex);
+  }
+}
+
+function shiftAnswerUp(surveyIndex, questionIndex, answerIndex)
+{
+  if (answerIndex > 0)
+  {
+    var answerContent = surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + answerIndex.toString()];
+    surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + answerIndex.toString()] = surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + (answerIndex - 1).toString()];
+    surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + (answerIndex - 1).toString()] = answerContent;
+
+    editQuestion(surveyIndex, questionIndex);
+  }
+}
+
+function shiftAnswerDown(surveyIndex, questionIndex, answerIndex)
+{
+  if (answerIndex < getAnswerCount(surveyIndex, questionIndex) - 1)
+  {
+    var answerContent = surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + answerIndex.toString()];
+    surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + answerIndex.toString()] = surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + (answerIndex + 1).toString()];
+    surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + (answerIndex + 1).toString()] = answerContent;
+
+    editQuestion(surveyIndex, questionIndex);
+  }
 }
 
 function addAnswer(surveyIndex, questionIndex)

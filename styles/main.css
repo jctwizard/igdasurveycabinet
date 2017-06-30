@@ -1,10 +1,28 @@
+html
+{
+  background: linear-gradient(aquamarine, coral);
+  height: 100%;
+}
+
 body
 {
-  font-family: monospace;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
   font-size: 1em;
-  color: red;
-  background-color: black;
+  color: oldlace;
+  background: #00000000;
   font-style: italic;
+  text-shadow: 2px 2px gainsboro;
+}
+
+input
+{
+  font-family: 'Arial Rounded MT Bold', sans-serif;
+  font-size: 2em;
+  color: oldlace;
+  background: #00000033;
+  font-style: italic;
+  text-shadow: 2px 2px gainsboro;
+  width: 50%;
 }
 
 #editorPanel
@@ -19,7 +37,8 @@ body
 
 .surveyTitle
 {
-  font-size: 3em;
+  font-size: 2em;
+  padding: 0.5em;
 }
 
 .surveyEditButton
@@ -39,7 +58,8 @@ body
 
 .surveyHeader
 {
-  font-size: 3em;
+  font-size: 2em;
+  padding: 0.5em;
 }
 
 .questionRow
@@ -47,9 +67,16 @@ body
 
 }
 
-.questionTitle
+.answerResponses
 {
   font-size: 2em;
+  padding: 1em;
+}
+
+.questionTitle
+{
+  font-size: 1.5em;
+  padding: 0.5em;
 }
 
 .questionEditButton
@@ -64,7 +91,8 @@ body
 
 .questionHeader
 {
-  font-size: 3em;
+  font-size: 2em;
+  padding: 0.5em;
 }
 
 .answerRow
@@ -74,7 +102,8 @@ body
 
 .answerTitle
 {
-  font-size: 2em;
+  font-size: 1.5em;
+  padding: 0.5em;
 }
 
 .questionSaveButton
