@@ -6,16 +6,20 @@ var config = {
   projectId: "igda-survey-arcade"
 };
 
-var surveys;
+var surveys = {};
 
 var activeSurveyIndex = 0;
 var activeQuestionIndex = 0;
+
+var online = false;
 
 document.getElementById("status").innerHTML = "starting up...";
 
 function init()
 {
-  if (navigator.onLine)
+  online = navigator.onLine;
+
+  if (online)
   {
     document.getElementById("status").innerHTML = "online";
     console.log("online");
@@ -29,9 +33,25 @@ function init()
       console.log(error.message);
     });
 
+    if (window.localStorage.getItem("syncRequired") == "true")
+    {
+      console.log("syncing");
+    }
+
     // Read survey data
     firebase.database().ref("surveys").once("value").then(function(data) {
       surveys = data.val();
+
+      if (surveys == null)
+      {
+        surveys = {};
+      }
+
+      if (window.localStorage.getItem("surveys") == "" || isJsonString(window.localStorage.getItem("surveys")) == false)
+      {
+        storeSurveysOffline();
+      }
+
       displaySurveys();
     });
   }
@@ -39,10 +59,45 @@ function init()
   {
     document.getElementById("status").innerHTML = "offline";
     console.log("offline");
-    window.localStorage.setItem("syncRequired", true);
-    surveys = window.localStorage.getItem("surveys");
+    window.localStorage.setItem("syncRequired", "true");
+
+    if (isJsonString(window.localStorage.getItem("surveys")))
+    {
+      surveys = JSON.parse(window.localStorage.getItem("surveys"));
+      alert("Loaded from local storage, go online to sync.");
+    }
+    else
+    {
+      alert("Error when reading from local storage.");
+    }
+
     displaySurveys();
   }
+
+  if (window.addEventListener)
+  {
+    window.addEventListener("online", goOnline, false);
+    window.addEventListener("offline", goOffline, false);
+  }
+  else
+  {
+    document.body.ononline = goOnline;
+    document.body.onoffline = goOffline;
+  }
+}
+
+function isJsonString(str)
+{
+    try
+    {
+        JSON.parse(str);
+    }
+    catch (e)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 function makeElement(parent, type, content, name, suffix)
@@ -116,7 +171,7 @@ function displaySurveys()
   {
     var surveyRow = makeElement(surveyPanel, "div", "", "surveyRow", surveyIndex.toString());
 
-    var surveyTitle = makeElement(surveyRow, "span", getSurveyName(surveyIndex), "surveyTitle", surveyIndex.toString());
+    var surveyTitle = makeElement(surveyRow, "div", getSurveyName(surveyIndex), "surveyTitle", surveyIndex.toString());
 
     var surveyEditButton = makeElement(surveyRow, "button", "edit survey", "surveyEditButton", surveyIndex.toString());
     surveyEditButton.setAttribute("onclick", "editSurvey(" + surveyIndex.toString() + ")");
@@ -131,8 +186,13 @@ function displaySurveys()
     surveyResultsButton.setAttribute("onclick", "viewSurveyResults(" + surveyIndex.toString() + ")");
   }
 
+  makeElement(editorPanel, "hr", "", "break", "");
+
   var addSurveyButton = makeElement(editorPanel, "button", "add survey", "addSurveyButton", "");
   addSurveyButton.setAttribute("onclick", "addSurvey()");
+
+  var saveSurveysButton = makeElement(editorPanel, "button", "save changes", "saveSurveysButton", "");
+  saveSurveysButton.setAttribute("onclick", "saveAll()");
 }
 
 function editSurvey(surveyIndex)
@@ -151,7 +211,7 @@ function editSurvey(surveyIndex)
   {
     var questionRow = makeElement(questionPanel, "div", "", "questionRow", questionIndex.toString());
 
-    var questionTitle = makeElement(questionRow, "span", getQuestionName(surveyIndex, questionIndex), "questionTitle", questionIndex.toString());
+    var questionTitle = makeElement(questionRow, "div", getQuestionName(surveyIndex, questionIndex), "questionTitle", questionIndex.toString());
 
     var questionEditButton = makeElement(questionRow, "button", "edit question", "questionEditButton", questionIndex.toString());
     questionEditButton.setAttribute("onclick", "editQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
@@ -159,6 +219,8 @@ function editSurvey(surveyIndex)
     var questionRemoveButton = makeElement(questionRow, "button", "remove question", "questionRemoveButton", questionIndex.toString());
     questionRemoveButton.setAttribute("onclick", "removeQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
   }
+
+  makeElement(editorPanel, "hr", "", "break", "");
 
   var addQuestionButton = makeElement(editorPanel, "button", "add question", "addQuestionButton", "");
   addQuestionButton.setAttribute("onclick", "addQuestion(" + surveyIndex.toString() + ")");
@@ -191,6 +253,8 @@ function editQuestion(surveyIndex, questionIndex)
       answerRemoveButton.setAttribute("onclick", "removeAnswer(" + surveyIndex.toString() + ", " + questionIndex.toString() + ", " + answerIndex.toString() + ")");
     }
 
+    makeElement(editorPanel, "hr", "", "break", "");
+
     var addAnswerButton = makeElement(editorPanel, "button", "add answer", "addAnswerButton", "");
     addAnswerButton.setAttribute("onclick", "addAnswer(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
 
@@ -200,8 +264,6 @@ function editQuestion(surveyIndex, questionIndex)
 
 function setSurveyName(elementId, surveyIndex)
 {
-  console.log(elementId);
-  console.log(document.getElementById(elementId).value);
   surveys["survey" + surveyIndex.toString()].surveyName = document.getElementById(elementId).value;
 }
 
@@ -281,14 +343,109 @@ function removeAnswer(surveyIndex, questionIndex, answerIndex)
   editQuestion(surveyIndex, questionIndex);
 }
 
+function saveAll()
+{
+  syncSurvey(-1, -1);
+
+  displaySurveys();
+}
+
 function saveSurvey(surveyIndex)
 {
+  syncSurvey(surveyIndex, -1);
+
   displaySurveys();
 }
 
 function saveQuestion(surveyIndex, questionIndex)
 {
+  syncSurvey(surveyIndex, questionIndex);
+
   editSurvey(surveyIndex);
+}
+
+function syncSurvey(surveyIndex, questionIndex)
+{
+  if (online)
+  {
+    if (surveyIndex == -1)
+    {
+      storeAllOnline();
+    }
+    else if (questionIndex == -1)
+    {
+      storeSurveyOnline(surveyIndex);
+    }
+    else
+    {
+      storeQuestionOnline(surveyIndex, questionIndex);
+    }
+  }
+  else
+  {
+    window.localStorage.setItem("syncRequired", "true");
+    storeSurveysOffline();
+    alert("Not connected to database, syncing offline. Connect later to sync online.");
+  }
+}
+
+function syncLocalSurveys()
+{
+  if (isJsonString(window.localStorage.getItem("surveys")))
+  {
+    firebase.database().ref('surveys').set(JSON.parse(window.localStorage.getItem("surveys")));
+    alert("Successfuly synced from local storage.");
+  }
+  else
+  {
+    alert("Error when reading from local storage during sync.");
+  }
+
+  window.localStorage.setItem("syncRequired", "false");
+}
+
+function storeAllOnline()
+{
+  firebase.database().ref('surveys').set(getSurveys());
+}
+
+function storeSurveyOnline(surveyIndex)
+{
+  firebase.database().ref('surveys/survey' + surveyIndex.toString()).set(getSurveys()["survey" + surveyIndex.toString()]);
+}
+
+function storeQuestionOnline(surveyIndex, questionIndex)
+{
+  firebase.database().ref('surveys/survey' + surveyIndex.toString() + "/questions/question" + questionIndex.toString()).set(getQuestions(surveyIndex)["question" + questionIndex.toString()]);
+}
+
+function storeSurveysOffline()
+{
+  if (surveys != undefined)
+  {
+    window.localStorage.setItem("surveys", JSON.stringify(surveys));
+  }
+}
+
+function goOnline()
+{
+  if (online == false)
+  {
+    online = true;
+
+    if (window.localStorage.getItem("syncRequired") == "true")
+    {
+      syncLocalSurveys();
+    }
+  }
+}
+
+function goOffline()
+{
+  if (online == true)
+  {
+    online = false;
+  }
 }
 
 function runSurvey(surveyIndex)
