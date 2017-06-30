@@ -9,7 +9,7 @@ body
 
 #editorPanel
 {
-  
+
 }
 
 .surveyRow
@@ -57,11 +57,6 @@ body
 
 }
 
-.surveyCancelButton
-{
-
-}
-
 .surveySaveButton
 {
 
@@ -80,11 +75,6 @@ body
 .answerTitle
 {
   font-size: 2em;
-}
-
-.questionCancelButton
-{
-
 }
 
 .questionSaveButton
