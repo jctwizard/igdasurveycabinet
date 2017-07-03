@@ -27,7 +27,28 @@ input
 
 #editorPanel
 {
+  width: 100%;
+  height: 100%;
+}
 
+button
+{
+  font-family: 'Arial Rounded MT Bold', sans-serif;
+  font-size: 1em;
+  color: oldlace;
+  background: #00000000;
+  background-color: coral;
+  border: 2px black;
+  border-radius: 100px;
+  box-shadow: 0 5px #999;
+}
+
+button:active
+{
+  background-color: coral;
+  box-shadow: 0 2px #666;
+  color: white;
+  transform: translateY(3px);
 }
 
 .surveyRow
@@ -95,6 +116,13 @@ input
   padding: 0.5em;
 }
 
+.activeQuestionHeader
+{
+  margin: 0;
+  font-size: 4em;
+  color: black;
+}
+
 .answerRow
 {
 
@@ -109,4 +137,27 @@ input
 .questionSaveButton
 {
 
+}
+
+.answerSelectButton
+{
+  font-family: 'Arial Rounded MT Bold';
+  font-size: 2em;
+  color: black;
+  background-color: coral;
+  border: 2px black;
+  border-radius: 100px;
+  box-shadow: 0 20px #999;
+  width: 200px;
+  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.answerSelectButton:active
+{
+  background-color: coral;
+  box-shadow: 0 10px #666;
+  color: white;
+  transform: translateY(10px);
 }

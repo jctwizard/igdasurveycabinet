@@ -560,14 +560,14 @@ function displayActiveQuestion()
   var editorPanel = document.getElementById("editorPanel");
   editorPanel.innerHTML = "";
 
-  var questionHeader = makeElement(editorPanel, "div", getQuestionName(surveyIndex, questionIndex), "questionHeader", questionIndex.toString());
+  var questionHeader = makeElement(editorPanel, "div", getQuestionName(surveyIndex, questionIndex), "activeQuestionHeader", questionIndex.toString());
 
   var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
 
   for (var answerIndex = 0; answerIndex < getAnswerCount(surveyIndex, questionIndex); answerIndex++)
   {
-    var answerRemoveButton = makeElement(editorPanel, "button", getAnswerName(surveyIndex, questionIndex, answerIndex), "answerRemoveButton", answerIndex.toString());
-    answerRemoveButton.setAttribute("onclick", "saveResponse(" + answerIndex.toString() + ")");
+    var answerSelectButton = makeElement(editorPanel, "button", getAnswerName(surveyIndex, questionIndex, answerIndex), "answerSelectButton", answerIndex.toString());
+    answerSelectButton.setAttribute("onclick", "saveResponse(" + answerIndex.toString() + ")");
   }
 }
 
