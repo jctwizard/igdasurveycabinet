@@ -756,11 +756,9 @@ function handleInput(event)
     restartSurveyTimeout();
   }
 
-  switch (event.key)
+  switch (event.keyCode)
   {
-    case "Esc":     exitSurvey();
-      break;
-    case "Escape":  exitSurvey();
+    case 27:     exitSurvey();
       break;
     default:
       return;
@@ -768,11 +766,12 @@ function handleInput(event)
 
   for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
   {
-    if (event.key == (buttonIndex + 1).toString())
+    if (event.keyCode == 49 + buttonIndex)
     {
       if (runningSurvey)
       {
         selectButton(buttonIndex);
+        console.log("selected button: " + buttonIndex.toString());
       }
     }
   }
