@@ -762,7 +762,7 @@ function handleInput(event)
     {
       if (runningSurvey)
       {
-        selectButton(buttonIndex);
+        activeButtons[buttonIndex].click();
         console.log("selected button: " + buttonIndex.toString());
       }
     }
