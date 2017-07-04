@@ -608,8 +608,8 @@ function displayEndMessage()
 
   syncSurvey(activeSurveyIndex, -1);
 
-  var backButton = makeElement(editorPanel, "button", "back", "backButton", activeSurveyIndex.toString());
-  backButton.setAttribute("onclick", "displaySurveys()");
+  var backButton = makeElement(editorPanel, "button", "restart", "backButton", activeSurveyIndex.toString());
+  backButton.setAttribute("onclick", "runSurvey(" + activeSurveyIndex.toString() + ")");
 }
 
 function viewSurveyResults(surveyIndex)
