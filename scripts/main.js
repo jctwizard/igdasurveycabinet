@@ -645,12 +645,12 @@ function displayActiveQuestion()
 
     if (buttonIndex < getAnswerCount(surveyIndex, questionIndex))
     {
-      answerSelectButton = makeElement(editorPanel, "button", getAnswerName(surveyIndex, questionIndex, answerIndex), "answerSelectButton", answerIndex.toString());
-      answerSelectButton.setAttribute("onclick", "saveResponse(" + answerIndex.toString() + ")");
+      answerSelectButton = makeElement(editorPanel, "button", getAnswerName(surveyIndex, questionIndex, buttonIndex), "answerSelectButton", buttonIndex.toString());
+      answerSelectButton.setAttribute("onclick", "saveResponse(" + buttonIndex.toString() + ")");
     }
     else
     {
-      answerSelectButton = makeElement(editorPanel, "button", "", "inactiveAnswerSelectButton", answerIndex.toString());
+      answerSelectButton = makeElement(editorPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
     }
 
     activeButtons.push(answerSelectButton);
@@ -693,7 +693,7 @@ function displayEndMessage()
   {
     var answerSelectButton;
 
-    answerSelectButton = makeElement(editorPanel, "button", "", "inactiveAnswerSelectButton", answerIndex.toString());
+    answerSelectButton = makeElement(editorPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
     answerSelectButton.setAttribute("onclick", "restartSurvey()");
 
     activeButtons.push(answerSelectButton);
