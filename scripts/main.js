@@ -10,6 +10,9 @@ var surveys = {};
 
 var activeSurveyIndex = 0;
 var activeQuestionIndex = 0;
+var activeButtons = [];
+
+var buttonCount = 4;
 
 var online = false;
 var runningSurvey = false;
@@ -19,6 +22,8 @@ var hideCursorTimeout = null;
 
 var resetSurveyDelay = 60;
 var resetSurveyTimeout = null;
+
+var endMessage = false;
 
 document.getElementById("status").innerHTML = "starting up...";
 
@@ -596,6 +601,8 @@ function restartSurvey()
   syncSurvey(activeSurveyIndex, -1);
 
   runSurvey(activeSurveyIndex);
+
+  endMessage = false;
 }
 
 function restartSurveyTimeout()
@@ -630,10 +637,23 @@ function displayActiveQuestion()
 
   var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
 
-  for (var answerIndex = 0; answerIndex < getAnswerCount(surveyIndex, questionIndex); answerIndex++)
+  activeButtons = [];
+
+  for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
   {
-    var answerSelectButton = makeElement(editorPanel, "button", getAnswerName(surveyIndex, questionIndex, answerIndex), "answerSelectButton", answerIndex.toString());
-    answerSelectButton.setAttribute("onclick", "saveResponse(" + answerIndex.toString() + ")");
+    var answerSelectButton;
+
+    if (buttonIndex < getAnswerCount(surveyIndex, questionIndex))
+    {
+      answerSelectButton = makeElement(editorPanel, "button", getAnswerName(surveyIndex, questionIndex, answerIndex), "answerSelectButton", answerIndex.toString());
+      answerSelectButton.setAttribute("onclick", "saveResponse(" + answerIndex.toString() + ")");
+    }
+    else
+    {
+      answerSelectButton = makeElement(editorPanel, "button", "", "inactiveAnswerSelectButton", answerIndex.toString());
+    }
+
+    activeButtons.push(answerSelectButton);
   }
 }
 
@@ -660,11 +680,33 @@ function displayNextQuestion()
 
 function displayEndMessage()
 {
-  var editorPanel = document.getElementById("editorPanel");
-  editorPanel.innerHTML = "thank you for completing the survey!";
+  endMessage = true;
 
-  var backButton = makeElement(editorPanel, "button", "restart", "backButton", activeSurveyIndex.toString());
-  backButton.setAttribute("onclick", "restartSurvey()");
+  var editorPanel = document.getElementById("editorPanel");
+  editorPanel.innerHTML = "thank you for completing the survey! hit any button to restart.";
+
+  var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
+
+  activeButtons = [];
+
+  for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
+  {
+    var answerSelectButton;
+
+    answerSelectButton = makeElement(editorPanel, "button", "", "inactiveAnswerSelectButton", answerIndex.toString());
+    answerSelectButton.setAttribute("onclick", "restartSurvey()");
+
+    activeButtons.push(answerSelectButton);
+  }
+}
+
+function exitSurvey()
+{
+  runningSurvey = false;
+
+  document.getElementById("header").style.visibility = "visible";
+
+  displaySurveys();
 }
 
 function viewSurveyResults(surveyIndex)
@@ -702,15 +744,6 @@ function viewSurveyResults(surveyIndex)
   backButton.setAttribute("onclick", "displaySurveys()");
 }
 
-function exitSurvey()
-{
-  runningSurvey = false;
-
-  document.getElementById("header").style.visibility = "visible";
-
-  displaySurveys();
-}
-
 function handleInput(event)
 {
   if (event.defaultPrevented)
@@ -731,6 +764,17 @@ function handleInput(event)
       break;
     default:
       return;
+  }
+
+  for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
+  {
+    if (event.key == (buttonIndex + 1).toString())
+    {
+      if (runningSurvey)
+      {
+        selectButton(buttonIndex);
+      }
+    }
   }
 
   event.preventDefault();
