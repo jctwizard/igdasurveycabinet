@@ -756,14 +756,6 @@ function handleInput(event)
     restartSurveyTimeout();
   }
 
-  switch (event.keyCode)
-  {
-    case 27:     exitSurvey();
-      break;
-    default:
-      return;
-  }
-
   for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
   {
     if (event.keyCode == 49 + buttonIndex)
@@ -774,6 +766,14 @@ function handleInput(event)
         console.log("selected button: " + buttonIndex.toString());
       }
     }
+  }
+
+  switch (event.keyCode)
+  {
+    case 27:     exitSurvey();
+      break;
+    default:
+      return;
   }
 
   event.preventDefault();
