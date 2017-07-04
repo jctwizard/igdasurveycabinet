@@ -546,6 +546,8 @@ function goOffline()
 
 function runSurvey(surveyIndex)
 {
+  launchIntoFullscreen(document.documentElement);
+
   activeSurveyIndex = surveyIndex;
   activeQuestionIndex = 0;
 
@@ -636,4 +638,24 @@ function viewSurveyResults(surveyIndex)
 
   var backButton = makeElement(editorPanel, "button", "back", "backButton", surveyIndex.toString());
   backButton.setAttribute("onclick", "displaySurveys()");
+}
+
+function launchIntoFullscreen(element)
+{
+  if (element.requestFullscreen)
+  {
+    element.requestFullscreen();
+  }
+  else if (element.mozRequestFullScreen)
+  {
+    element.mozRequestFullScreen();
+  }
+  else if (element.webkitRequestFullscreen)
+  {
+    element.webkitRequestFullscreen();
+  }
+  else if (element.msRequestFullscreen)
+  {
+    element.msRequestFullscreen();
+  }
 }
