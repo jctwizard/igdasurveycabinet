@@ -14,6 +14,12 @@ var activeQuestionIndex = 0;
 var online = false;
 var runningSurvey = false;
 
+var hideCursorDelay = 10;
+var hideCursorTimeout = null;
+
+var resetSurveyDelay = 60;
+var resetSurveyTimeout = null;
+
 document.getElementById("status").innerHTML = "starting up...";
 
 function init()
@@ -80,12 +86,14 @@ function init()
     window.addEventListener("online", goOnline, false);
     window.addEventListener("offline", goOffline, false);
     window.addEventListener("keydown", handleInput, false);
+    window.addEventListener("mousemove", handleMouseMove, false);
   }
   else
   {
     document.body.ononline = goOnline;
     document.body.onoffline = goOffline;
     document.body.keydown = handleInput;
+    document.body.mousemove = handleMouseMove;
   }
 }
 
@@ -172,6 +180,20 @@ function displaySurveys()
   var editorPanel = document.getElementById("editorPanel");
 
   editorPanel.innerHTML = "";
+
+  document.body.style.cursor = "default";
+
+  if (resetSurveyTimeout != null)
+  {
+    clearTimeout(resetSurveyTimeout);
+    resetSurveyTimeout = null;
+  }
+
+  if (hideCursorTimeout != null)
+  {
+    clearTimeout(hideCursorTimeout);
+    hideCursorTimeout = null;
+  }
 
   var surveyPanel = makeElement(editorPanel, "div", "", "surveyPanel", "");
 
@@ -558,7 +580,42 @@ function runSurvey(surveyIndex)
   activeSurveyIndex = surveyIndex;
   activeQuestionIndex = 0;
 
+  restartSurveyTimeout();
+  restartCursorTimeout();
+
   displayActiveQuestion();
+}
+
+function hideCursor()
+{
+  document.body.style.cursor = "none";
+}
+
+function restartSurvey()
+{
+  syncSurvey(activeSurveyIndex, -1);
+
+  runSurvey(activeSurveyIndex);
+}
+
+function restartSurveyTimeout()
+{
+  if (resetSurveyTimeout != null)
+  {
+    clearTimeout(resetSurveyTimeout);
+  }
+
+  resetSurveyTimeout = setTimeout(restartSurvey, resetSurveyDelay * 1000);
+}
+
+function restartCursorTimeout()
+{
+  if (hideCursorTimeout != null)
+  {
+    clearTimeout(hideCursorTimeout);
+  }
+
+  hideCursorTimeout = setTimeout(hideCursor, hideCursorDelay * 1000);
 }
 
 function displayActiveQuestion()
@@ -606,10 +663,8 @@ function displayEndMessage()
   var editorPanel = document.getElementById("editorPanel");
   editorPanel.innerHTML = "thank you for completing the survey!";
 
-  syncSurvey(activeSurveyIndex, -1);
-
   var backButton = makeElement(editorPanel, "button", "restart", "backButton", activeSurveyIndex.toString());
-  backButton.setAttribute("onclick", "runSurvey(" + activeSurveyIndex.toString() + ")");
+  backButton.setAttribute("onclick", "restartSurvey()");
 }
 
 function viewSurveyResults(surveyIndex)
@@ -663,6 +718,11 @@ function handleInput(event)
     return;
   }
 
+  if (resetSurveyTimeout != null)
+  {
+    restartSurveyTimeout();
+  }
+
   switch (event.key)
   {
     case "Esc":     exitSurvey();
@@ -674,6 +734,21 @@ function handleInput(event)
   }
 
   event.preventDefault();
+}
+
+function handleMouseMove()
+{
+  document.body.style.cursor = "default";
+
+  if (hideCursorTimeout != null)
+  {
+    restartCursorTimeout();
+  }
+
+  if (resetSurveyTimeout != null)
+  {
+    restartSurveyTimeout();
+  }
 }
 
 function launchIntoFullscreen(element)
