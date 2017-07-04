@@ -12,6 +12,7 @@ var activeSurveyIndex = 0;
 var activeQuestionIndex = 0;
 
 var online = false;
+var runningSurvey = false;
 
 document.getElementById("status").innerHTML = "starting up...";
 
@@ -78,11 +79,13 @@ function init()
   {
     window.addEventListener("online", goOnline, false);
     window.addEventListener("offline", goOffline, false);
+    window.addEventListener("keydown", handleInput, false);
   }
   else
   {
     document.body.ononline = goOnline;
     document.body.onoffline = goOffline;
+    document.body.keydown = handleInput;
   }
 }
 
@@ -548,6 +551,10 @@ function runSurvey(surveyIndex)
 {
   launchIntoFullscreen(document.documentElement);
 
+  runningSurvey = true;
+
+  document.getElementById("header").style.visibility = "hidden";
+
   activeSurveyIndex = surveyIndex;
   activeQuestionIndex = 0;
 
@@ -638,6 +645,35 @@ function viewSurveyResults(surveyIndex)
 
   var backButton = makeElement(editorPanel, "button", "back", "backButton", surveyIndex.toString());
   backButton.setAttribute("onclick", "displaySurveys()");
+}
+
+function exitSurvey()
+{
+  runningSurvey = false;
+
+  document.getElementById("header").style.visibility = "visible";
+
+  displaySurveys();
+}
+
+function handleInput(event)
+{
+  if (event.defaultPrevented)
+  {
+    return;
+  }
+
+  switch (event.key)
+  {
+    case "Esc":     exitSurvey();
+      break;
+    case "Escape":  exitSurvey();
+      break;
+    default:
+      return;
+  }
+
+  event.preventDefault();
 }
 
 function launchIntoFullscreen(element)
