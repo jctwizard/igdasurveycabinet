@@ -90,14 +90,16 @@ function init()
   {
     window.addEventListener("online", goOnline, false);
     window.addEventListener("offline", goOffline, false);
-    window.addEventListener("keydown", handleInput, false);
+    window.addEventListener("keydown", handleKeyDown, false);
+    window.addEventListener("keyup", handleKeyUp, false);
     window.addEventListener("mousemove", handleMouseMove, false);
   }
   else
   {
     document.body.ononline = goOnline;
     document.body.onoffline = goOffline;
-    document.body.keydown = handleInput;
+    document.body.keydown = handleKeyDown;
+    document.body.keyup = handleKeyUp;
     document.body.mousemove = handleMouseMove;
   }
 }
@@ -647,6 +649,7 @@ function displayActiveQuestion()
     {
       answerSelectButton = makeElement(editorPanel, "button", getAnswerName(surveyIndex, questionIndex, buttonIndex), "answerSelectButton", buttonIndex.toString());
       answerSelectButton.setAttribute("onclick", "saveResponse(" + buttonIndex.toString() + ")");
+      answerSelectButton.setAttribute("onmousedown", function() { console.log("mouse down fired"); });
     }
     else
     {
@@ -744,7 +747,7 @@ function viewSurveyResults(surveyIndex)
   backButton.setAttribute("onclick", "displaySurveys()");
 }
 
-function handleInput(event)
+function handleKeyDown(event)
 {
   if (event.defaultPrevented)
   {
@@ -762,8 +765,7 @@ function handleInput(event)
     {
       if (runningSurvey)
       {
-        activeButtons[buttonIndex].click();
-        console.log("selected button: " + buttonIndex.toString());
+        $(activeButtons[buttonIndex]).addClass("active");
       }
     }
   }
@@ -777,6 +779,32 @@ function handleInput(event)
   }
 
   event.preventDefault();
+}
+
+function handleKeyUp(event)
+{
+  if (event.defaultPrevented)
+  {
+    return;
+  }
+
+  for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
+  {
+    if (event.keyCode == 49 + buttonIndex)
+    {
+      if (runningSurvey)
+      {
+        $(activeButtons[buttonIndex]).click();
+      }
+    }
+  }
+
+  event.preventDefault();
+}
+
+function output(msg)
+{
+  console.log(msg);
 }
 
 function handleMouseMove()

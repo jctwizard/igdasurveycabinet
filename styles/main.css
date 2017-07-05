@@ -174,3 +174,11 @@ button:focus
   color: white;
   transform: translateY(10px);
 }
+
+.answerSelectButton.active
+{
+  background-color: coral;
+  box-shadow: 0 10px #666;
+  color: white;
+  transform: translateY(10px);
+}
