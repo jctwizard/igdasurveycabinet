@@ -764,12 +764,12 @@ function displayActiveQuestion()
 
     if (buttonIndex < getAnswerCount(surveyIndex, questionIndex))
     {
-      answerSelectButton = makeElement(editorPanel, "button", getAnswerName(surveyIndex, questionIndex, buttonIndex), "answerSelectButton", buttonIndex.toString());
+      answerSelectButton = makeElement(answerPanel, "button", getAnswerName(surveyIndex, questionIndex, buttonIndex), "answerSelectButton", buttonIndex.toString());
       answerSelectButton.setAttribute("onclick", "saveResponse(" + buttonIndex.toString() + ")");
     }
     else
     {
-      answerSelectButton = makeElement(editorPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
+      answerSelectButton = makeElement(answerPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
     }
 
     activeButtons.push(answerSelectButton);
@@ -802,7 +802,7 @@ function displayWelcomeMessage()
   var editorPanel = document.getElementById("editorPanel");
   editorPanel.innerHTML = "";
 
-  var welcomeMessage = makeElement(editorPanel, "div", getSurvey(activeSurveyIndex).welcomeMessage, "welcomeMessage", "")
+  var welcomeMessage = makeElement(editorPanel, "div", getSurvey(activeSurveyIndex).welcomeMessage, "activeWelcomeMessage", "")
 
   var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
 
@@ -812,7 +812,7 @@ function displayWelcomeMessage()
   {
     var answerSelectButton;
 
-    answerSelectButton = makeElement(editorPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
+    answerSelectButton = makeElement(answerPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
     answerSelectButton.setAttribute("onclick", "displayActiveQuestion()");
 
     activeButtons.push(answerSelectButton);
@@ -824,7 +824,7 @@ function displayEndMessage()
   var editorPanel = document.getElementById("editorPanel");
   editorPanel.innerHTML = "";
 
-  var endMessage = makeElement(editorPanel, "div", getSurvey(activeSurveyIndex).endMessage, "endMessage", "")
+  var endMessage = makeElement(editorPanel, "div", getSurvey(activeSurveyIndex).endMessage, "activeEndMessage", "")
 
   var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
 
@@ -834,7 +834,7 @@ function displayEndMessage()
   {
     var answerSelectButton;
 
-    answerSelectButton = makeElement(editorPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
+    answerSelectButton = makeElement(answerPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
     answerSelectButton.setAttribute("onclick", "restartSurvey()");
 
     activeButtons.push(answerSelectButton);
