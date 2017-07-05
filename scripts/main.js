@@ -285,6 +285,9 @@ function editSurvey(surveyIndex)
     var questionDuplicateButton = makeElement(questionRow, "button", "duplicate question", "questionDuplicateButton", questionIndex.toString());
     questionDuplicateButton.setAttribute("onclick", "duplicateQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
 
+    var questionRemoveButton = makeElement(questionRow, "button", "remove question", "questionRemoveButton", questionIndex.toString());
+    questionRemoveButton.setAttribute("onclick", "removeQuestion(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
+
     var questionShiftUpButton = makeElement(questionRow, "button", "shift up", "questionShiftUpButton", questionIndex.toString());
     questionShiftUpButton.setAttribute("onclick", "shiftQuestionUp(" + surveyIndex.toString() + ", " + questionIndex.toString() + ")");
 
@@ -395,7 +398,16 @@ function addSurvey()
 
 function duplicateSurvey(surveyIndex)
 {
-  surveys["survey" + getSurveyCount().toString()] = surveys["survey" + surveyIndex.toString()];
+  var newSurveyIndex = getSurveyCount();
+  surveys["survey" + newSurveyIndex.toString()] = $.extend(true, {}, surveys["survey" + surveyIndex.toString()]);
+
+  for (var questionIndex = 0; questionIndex < getQuestionCount(newSurveyIndex); questionIndex++)
+  {
+    for (var answerIndex = 0; answerIndex < getAnswerCount(newSurveyIndex, questionIndex); answerIndex++)
+    {
+      surveys["survey" + newSurveyIndex.toString()].questions["question" + questionIndex].answers["answer" + answerIndex].responses = 0;
+    }
+  }
 
   displaySurveys();
 }
@@ -409,7 +421,13 @@ function addQuestion(surveyIndex)
 
 function duplicateQuestion(surveyIndex, questionIndex)
 {
-  surveys["survey" + surveyIndex.toString()].questions["question" + getQuestionCount(surveyIndex)] = surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()];
+  var newQuestionIndex = getQuestionCount(surveyIndex);
+  surveys["survey" + surveyIndex.toString()].questions["question" + newQuestionIndex] = $.extend(true, {}, surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()]);
+
+  for (var answerIndex = 0; answerIndex < getAnswerCount(surveyIndex, newQuestionIndex); answerIndex++)
+  {
+    surveys["survey" + surveyIndex.toString()].questions["question" + newQuestionIndex].answers["answer" + answerIndex].responses = 0;
+  }
 
   editSurvey(surveyIndex);
 }
