@@ -188,6 +188,18 @@ function getAnswerResponses(surveyIndex, questionIndex, answerIndex)
   return surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + answerIndex.toString()].responses;
 }
 
+function getTotalResponses(surveyIndex)
+{
+  var responses = 0;
+
+  for (var answerIndex = 0; answerIndex < getAnswerCount(surveyIndex, 0); answerIndex++)
+  {
+    responses += getAnswerResponses(surveyIndex, 0, answerIndex);
+  }
+
+  return responses;
+}
+
 function displaySurveys()
 {
   var editorPanel = document.getElementById("editorPanel");
@@ -253,6 +265,14 @@ function editSurvey(surveyIndex)
   surveyHeader.setAttribute("onchange", "setSurveyName('" + surveyHeader.id + "', " + surveyIndex.toString() + ")");
   surveyHeader.focus();
   surveyHeader.select();
+
+  makeElement(editorPanel, "div", "Survey Date:", "", "");
+  var surveyDate = makeElement(editorPanel, "input", getSurvey(surveyIndex).date, "surveyDate", surveyIndex.toString());
+  surveyDate.setAttribute("onchange", "setSurveyDate('" + surveyDate.id + "', " + surveyIndex.toString() + ")");
+
+  makeElement(editorPanel, "div", "Survey Location:", "", "");
+  var surveyLocation = makeElement(editorPanel, "input", getSurvey(surveyIndex).location, "surveyLocation", surveyIndex.toString());
+  surveyLocation.setAttribute("onchange", "setSurveyLocation('" + surveyLocation.id + "', " + surveyIndex.toString() + ")");
 
   makeElement(editorPanel, "div", "Show Welcome Message?:", "surveyWelcomeMessageLabel", surveyIndex.toString());
   var surveyShowWelcomeMessage = makeElement(editorPanel, "input", "", "surveyShowWelcomeMessage", surveyIndex.toString());
@@ -364,6 +384,16 @@ function setSurveyName(elementId, surveyIndex)
   surveys["survey" + surveyIndex.toString()].surveyName = document.getElementById(elementId).value;
 }
 
+function setSurveyDate(elementId, surveyIndex)
+{
+  surveys["survey" + surveyIndex.toString()].date = document.getElementById(elementId).value;
+}
+
+function setSurveyLocation(elementId, surveyIndex)
+{
+  surveys["survey" + surveyIndex.toString()].location = document.getElementById(elementId).value;
+}
+
 function setShowWelcomeMessage(elementId, surveyIndex)
 {
   surveys["survey" + surveyIndex.toString()].showWelcomeMessage = document.getElementById(elementId).checked;
@@ -391,7 +421,7 @@ function setAnswerName(elementId, surveyIndex, questionIndex, answerIndex)
 
 function addSurvey()
 {
-  surveys["survey" + getSurveyCount().toString()] = { "surveyName":"new survey", "welcomeMessage":defaultWelcomeMessage, "endMessage":defaultEndMessage, "showWelcomeMessage":false, "questions": {"question0":{"questionName":"new question", "answers":{"answer0":{"answerName":"new answer", "responses":0}}}}};
+  surveys["survey" + getSurveyCount().toString()] = { "surveyName":"new survey", "date":"0/0/0", "location":"Scotland", "welcomeMessage":defaultWelcomeMessage, "endMessage":defaultEndMessage, "showWelcomeMessage":false, "questions": {"question0":{"questionName":"new question", "answers":{"answer0":{"answerName":"new answer", "responses":0}}}}};
 
   displaySurveys();
 }
@@ -826,6 +856,8 @@ function viewSurveyResults(surveyIndex)
   editorPanel.innerHTML = "";
 
   var surveyHeader = makeElement(editorPanel, "div", getSurveyName(surveyIndex), "surveyResultsHeader", surveyIndex.toString());
+  var surveyDate = makeElement(editorPanel, "div", getSurvey(surveyIndex).date, "surveyDate", surveyIndex.toString());
+  var surveyLocation = makeElement(editorPanel, "div", getSurvey(surveyIndex).location, "surveyLocation", surveyIndex.toString());
 
   var questionPanel = makeElement(editorPanel, "div", "", "questionPanel", "")
 
@@ -849,10 +881,59 @@ function viewSurveyResults(surveyIndex)
     }
   }
 
+  makeElement(editorPanel, "span", "Total Responses", "", "");
+  var totalResponses = makeElement(editorPanel, "span", getTotalResponses(surveyIndex), "totalResponses", questionIndex.toString());
+
   makeElement(editorPanel, "hr", "", "break", "");
+
+  var exportLink = makeElement(editorPanel, "a", "export", "exportLink", surveyIndex.toString());
+  var blob = new Blob(["\ufeff", constructCsv(surveyIndex)]);
+  var url = URL.createObjectURL(blob);
+  exportLink.href = url;
+  exportLink.download = "results.csv";
 
   var backButton = makeElement(editorPanel, "button", "back", "backButton", surveyIndex.toString());
   backButton.setAttribute("onclick", "displaySurveys()");
+}
+
+function constructCsv(surveyIndex)
+{
+    var str = "";
+
+    str += "Survey Name," + getSurveyName(surveyIndex) + "\n";
+
+    str += "Survey Data," + getSurvey(surveyIndex).date + "\n";
+
+    str += "Survey Location," + getSurvey(surveyIndex).location + "\n";
+
+    str += "\n";
+
+    str += "Question,Answer,Responses\n";
+
+    for (var questionIndex = 0; questionIndex < getQuestionCount(surveyIndex); questionIndex++)
+    {
+        for (var answerIndex = 0; answerIndex < getAnswerCount(surveyIndex, questionIndex); answerIndex++)
+        {
+          var line = "";
+
+          if (answerIndex == 0)
+          {
+            line += getQuestionName(surveyIndex, questionIndex) + ",";
+          }
+          else
+          {
+            line += ",";
+          }
+
+          line += getAnswerName(surveyIndex, questionIndex, answerIndex) + "," + getAnswerResponses(surveyIndex, questionIndex, answerIndex);
+
+          str += line + "\n";
+        }
+    }
+
+    str += "\nTotal Responses," + getTotalResponses(surveyIndex) + "\n";
+
+    return str;
 }
 
 function handleKeyDown(event)
