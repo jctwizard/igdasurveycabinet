@@ -167,7 +167,7 @@ button:focus
   margin-right: auto;
 }
 
-.answerSelectButton:active
+.answerSelectButton.active, .answerSelectButton:active
 {
   background-color: coral;
   box-shadow: 0 10px #666;
@@ -175,9 +175,24 @@ button:focus
   transform: translateY(10px);
 }
 
-.answerSelectButton.active
+.inactiveAnswerSelectButton
 {
-  background-color: coral;
+  font-family: 'Arial Rounded MT Bold';
+  font-size: 2em;
+  color: black;
+  background-color: lightgrey;
+  border: 2px black;
+  border-radius: 100px;
+  box-shadow: 0 20px #999;
+  width: 200px;
+  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.inactiveAnswerSelectButton.active, .inactiveAnswerSelectButton:active
+{
+  background-color: grey;
   box-shadow: 0 10px #666;
   color: white;
   transform: translateY(10px);
