@@ -26,6 +26,8 @@ var resetSurveyTimeout = null;
 var defaultWelcomeMessage = "Take a moment to answer some questions for us? Hit any button to continue.";
 var defaultEndMessage = "Thank you for answering some questions! Hit any button to restart.";
 
+var transitionTime = 0.5 * 1000;
+
 document.getElementById("status").innerHTML = "starting up...";
 
 function init()
@@ -721,7 +723,10 @@ function restartSurvey()
 {
   syncSurvey(activeSurveyIndex, -1);
 
-  runSurvey(activeSurveyIndex);
+  $("#editorPanel").css({ left: "0px" });
+  $("#editorPanel").animate({ left: "-100%" }, transitionTime);
+
+  setTimeout(runSurvey, transitionTime, activeSurveyIndex);
 }
 
 function restartSurveyTimeout()
@@ -774,6 +779,9 @@ function displayActiveQuestion()
 
     activeButtons.push(answerSelectButton);
   }
+
+  $("#editorPanel").css({ left: "100%" });
+  $("#editorPanel").animate({ left: "0px" }, transitionTime);
 }
 
 function saveResponse(answerIndex)
@@ -783,17 +791,23 @@ function saveResponse(answerIndex)
   displayNextQuestion();
 }
 
-function displayNextQuestion()
+function displayNextQuestion(firstQuestion)
 {
-  activeQuestionIndex += 1;
+  if (firstQuestion != true)
+  {
+    activeQuestionIndex += 1;
+  }
+
+  $("#editorPanel").css({ left: "0px" });
+  $("#editorPanel").animate({ left: "-100%" }, transitionTime);
 
   if (activeQuestionIndex >= getQuestionCount(activeSurveyIndex))
   {
-    displayEndMessage();
+    setTimeout(displayEndMessage, transitionTime);
   }
   else
   {
-    displayActiveQuestion();
+    setTimeout(displayActiveQuestion, transitionTime);
   }
 }
 
@@ -813,10 +827,13 @@ function displayWelcomeMessage()
     var answerSelectButton;
 
     answerSelectButton = makeElement(answerPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
-    answerSelectButton.setAttribute("onclick", "displayActiveQuestion()");
+    answerSelectButton.setAttribute("onclick", "displayNextQuestion(true)");
 
     activeButtons.push(answerSelectButton);
   }
+
+  $("#editorPanel").css({ left: "100%" });
+  $("#editorPanel").animate({ left: "0px" }, transitionTime);
 }
 
 function displayEndMessage()
@@ -839,6 +856,9 @@ function displayEndMessage()
 
     activeButtons.push(answerSelectButton);
   }
+
+  $("#editorPanel").css({ left: "100%" });
+  $("#editorPanel").animate({ left: "0" }, transitionTime);
 }
 
 function exitSurvey()

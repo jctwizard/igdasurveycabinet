@@ -35,6 +35,9 @@ input
 
 #editorPanel
 {
+  position: absolute;
+  left: 0;
+  top: 10vh;
   width: 100%;
   height: 100%;
   background: #00000000;
@@ -155,7 +158,8 @@ button:focus
   margin: auto;
   font-size: 5vw;
   color: black;
-  top: 30vh;
+  top: 0vh;
+  animation: MoveUpDown 4s ease-in-out infinite;
 }
 
 .activeQuestionHeader
@@ -167,7 +171,8 @@ button:focus
   margin: auto;
   font-size: 5vw;
   color: black;
-  top: 30vh;
+  top: 0vh;
+  animation: MoveUpDown 4s ease-in-out infinite;
 }
 
 .activeEndMessage
@@ -179,7 +184,8 @@ button:focus
   margin: auto;
   font-size: 5vw;
   color: black;
-  top: 30vh;
+  top: 0vh;
+  animation: MoveUpDown 4s ease-in-out infinite;
 }
 
 .answerPanel
@@ -234,4 +240,17 @@ button:focus
   box-shadow: 0 1vw #666;
   color: white;
   transform: translateY(1vw);
+}
+
+@keyframes MoveUpDown {
+  0% {
+    top: 30vh;
+    left: auto;
+  }
+  50% {
+    top: 32vh;
+  }
+  100% {
+    top: 30vh;
+  }
 }
