@@ -130,36 +130,6 @@ button:focus
   padding: 0.5em;
 }
 
-.activeWelcomeMessage
-{
-  width: 100%;
-  text-align: center;
-  margin: auto;
-  font-size: 4em;
-  color: black;
-  margin-top: 10%;
-}
-
-.activeEndMessage
-{
-  width: 100%;
-  text-align: center;
-  margin: auto;
-  font-size: 4em;
-  color: black;
-  margin-top: 10%;
-}
-
-.activeQuestionHeader
-{
-  width: 100%;
-  text-align: center;
-  margin: auto;
-  font-size: 4em;
-  color: black;
-  margin-top: 10%;
-}
-
 .answerRow
 {
 
@@ -176,11 +146,50 @@ button:focus
 
 }
 
+.activeWelcomeMessage
+{
+  position: absolute;
+  vertical-align: center;
+  width: 100%;
+  text-align: center;
+  margin: auto;
+  font-size: 5vw;
+  color: black;
+  top: 30vh;
+}
+
+.activeQuestionHeader
+{
+  position: absolute;
+  vertical-align: center;
+  width: 100%;
+  text-align: center;
+  margin: auto;
+  font-size: 5vw;
+  color: black;
+  top: 30vh;
+}
+
+.activeEndMessage
+{
+  position: absolute;
+  vertical-align: center;
+  width: 100%;
+  text-align: center;
+  margin: auto;
+  font-size: 5vw;
+  color: black;
+  top: 30vh;
+}
+
 .answerPanel
 {
-  width: 60%;
+  position: absolute;
+  vertical-align: center;
+  width: 80vw;
   margin: auto;
-  margin-top: 10%;
+  top: 50vh;
+  left: 10vw;
   display: flex;
   justify-content: space-between;
 }
@@ -191,44 +200,38 @@ button:focus
 
   text-align: center;
   font-family: 'Arial Rounded MT Bold';
-  font-size: 2em;
+  font-size: 2vw;
   color: black;
   background-color: coral;
-  border: 2px black;
-  border-radius: 100px;
-  box-shadow: 0 20px #999;
-  width: 200px;
-  height: 200px;
+  border-radius: 7.5vw;
+  box-shadow: 0 2vw #999;
+  width: 15vw;
+  height: 15vw;
 }
 
 .answerSelectButton.active, .answerSelectButton:active
 {
   background-color: coral;
-  box-shadow: 0 10px #666;
+  box-shadow: 0 1vw #666;
   color: white;
-  transform: translateY(10px);
+  transform: translateY(1vw);
 }
 
 .inactiveAnswerSelectButton
 {
   vertical-align: top;
 
-  text-align: center;
-  font-family: 'Arial Rounded MT Bold';
-  font-size: 2em;
-  color: black;
   background-color: lightgrey;
-  border: 2px black;
-  border-radius: 100px;
-  box-shadow: 0 20px #999;
-  width: 200px;
-  height: 200px;
+  border-radius: 7.5vw;
+  box-shadow: 0 2vw #999;
+  width: 15vw;
+  height: 15vw;
 }
 
 .inactiveAnswerSelectButton.active, .inactiveAnswerSelectButton:active
 {
   background-color: grey;
-  box-shadow: 0 10px #666;
+  box-shadow: 0 1vw #666;
   color: white;
-  transform: translateY(10px);
+  transform: translateY(1vw);
 }
