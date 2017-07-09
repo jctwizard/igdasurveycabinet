@@ -690,8 +690,23 @@ function goOffline()
   }
 }
 
+function transitionSurveyRightToCenter()
+{
+  document.getElementById("activePanel").classList.remove("moveCenterLeft");
+  document.getElementById("activePanel").classList.add("moveRightCenter");
+}
+
+function transitionSurveyCenterToLeft()
+{
+  document.getElementById("activePanel").classList.remove("moveRightCenter");
+  document.getElementById("activePanel").classList.add("moveCenterLeft");
+}
+
 function runSurvey(surveyIndex)
 {
+  document.getElementById("editorPanel").innerHTML = "";
+  document.getElementById("activePanel").style.visibility = "visible";
+
   launchIntoFullscreen(document.documentElement);
 
   runningSurvey = true;
@@ -723,8 +738,7 @@ function restartSurvey()
 {
   syncSurvey(activeSurveyIndex, -1);
 
-  $("#editorPanel").css({ left: "0px" });
-  $("#editorPanel").animate({ left: "-100%" }, transitionTime);
+  transitionSurveyCenterToLeft();
 
   setTimeout(runSurvey, transitionTime, activeSurveyIndex);
 }
@@ -754,12 +768,12 @@ function displayActiveQuestion()
   var surveyIndex = activeSurveyIndex;
   var questionIndex = activeQuestionIndex;
 
-  var editorPanel = document.getElementById("editorPanel");
-  editorPanel.innerHTML = "";
+  var activePanel = document.getElementById("activePanel");
+  activePanel.innerHTML = "";
 
-  var questionHeader = makeElement(editorPanel, "div", getQuestionName(surveyIndex, questionIndex), "activeQuestionHeader", questionIndex.toString());
+  var questionHeader = makeElement(activePanel, "div", getQuestionName(surveyIndex, questionIndex), "activeQuestionHeader", questionIndex.toString());
 
-  var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
+  var answerPanel = makeElement(activePanel, "div", "", "answerPanel", "")
 
   activeButtons = [];
 
@@ -780,8 +794,7 @@ function displayActiveQuestion()
     activeButtons.push(answerSelectButton);
   }
 
-  $("#editorPanel").css({ left: "100%" });
-  $("#editorPanel").animate({ left: "0px" }, transitionTime);
+  transitionSurveyRightToCenter();
 }
 
 function saveResponse(answerIndex)
@@ -798,8 +811,7 @@ function displayNextQuestion(firstQuestion)
     activeQuestionIndex += 1;
   }
 
-  $("#editorPanel").css({ left: "0px" });
-  $("#editorPanel").animate({ left: "-100%" }, transitionTime);
+  transitionSurveyCenterToLeft();
 
   if (activeQuestionIndex >= getQuestionCount(activeSurveyIndex))
   {
@@ -813,12 +825,12 @@ function displayNextQuestion(firstQuestion)
 
 function displayWelcomeMessage()
 {
-  var editorPanel = document.getElementById("editorPanel");
-  editorPanel.innerHTML = "";
+  var activePanel = document.getElementById("activePanel");
+  activePanel.innerHTML = "";
 
-  var welcomeMessage = makeElement(editorPanel, "div", getSurvey(activeSurveyIndex).welcomeMessage, "activeWelcomeMessage", "")
+  var welcomeMessage = makeElement(activePanel, "div", getSurvey(activeSurveyIndex).welcomeMessage, "activeWelcomeMessage", "")
 
-  var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
+  var answerPanel = makeElement(activePanel, "div", "", "answerPanel", "")
 
   activeButtons = [];
 
@@ -832,18 +844,17 @@ function displayWelcomeMessage()
     activeButtons.push(answerSelectButton);
   }
 
-  $("#editorPanel").css({ left: "100%" });
-  $("#editorPanel").animate({ left: "0px" }, transitionTime);
+  transitionSurveyRightToCenter();
 }
 
 function displayEndMessage()
 {
-  var editorPanel = document.getElementById("editorPanel");
-  editorPanel.innerHTML = "";
+  var activePanel = document.getElementById("activePanel");
+  activePanel.innerHTML = "";
 
-  var endMessage = makeElement(editorPanel, "div", getSurvey(activeSurveyIndex).endMessage, "activeEndMessage", "")
+  var endMessage = makeElement(activePanel, "div", getSurvey(activeSurveyIndex).endMessage, "activeEndMessage", "")
 
-  var answerPanel = makeElement(editorPanel, "div", "", "answerPanel", "")
+  var answerPanel = makeElement(activePanel, "div", "", "answerPanel", "")
 
   activeButtons = [];
 
@@ -857,13 +868,15 @@ function displayEndMessage()
     activeButtons.push(answerSelectButton);
   }
 
-  $("#editorPanel").css({ left: "100%" });
-  $("#editorPanel").animate({ left: "0" }, transitionTime);
+  transitionSurveyRightToCenter();
 }
 
 function exitSurvey()
 {
   runningSurvey = false;
+
+  document.getElementById("activePanel").style.visibility = "hidden";
+  document.getElementById("activePanel").innerHTML = "";
 
   document.getElementById("header").style.visibility = "visible";
 

@@ -35,9 +35,6 @@ input
 
 #editorPanel
 {
-  position: absolute;
-  left: 0;
-  top: 10vh;
   width: 100%;
   height: 100%;
   background: #00000000;
@@ -188,6 +185,18 @@ button:focus
   animation: MoveUpDown 4s ease-in-out infinite;
 }
 
+#activePanel
+{
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  background: #00000000;
+}
+
 .answerPanel
 {
   position: absolute;
@@ -242,15 +251,33 @@ button:focus
   transform: translateY(1vw);
 }
 
-@keyframes MoveUpDown {
-  0% {
-    top: 30vh;
-    left: auto;
-  }
-  50% {
-    top: 32vh;
-  }
-  100% {
-    top: 30vh;
-  }
+@keyframes MoveUpDown
+{
+  0%    { top: 30vh; }
+  50%   { top: 32vh; }
+  100%  { top: 30vh; }
+}
+
+@keyframes MoveRightCenter
+{
+  0%    { left: 100% }
+  25%   { left: 100%; }
+  100%  { left: 0%; }
+}
+
+.moveRightCenter
+{
+  animation: MoveRightCenter 0.5s ease-out;
+}
+
+@keyframes MoveCenterLeft
+{
+  0%    { left: 0% }
+  25%   { left: 0%; }
+  100%  { left: -100%; }
+}
+
+.moveCenterLeft
+{
+  animation: MoveCenterLeft 0.5s ease-in;
 }
