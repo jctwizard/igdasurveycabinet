@@ -1,6 +1,6 @@
 html
 {
-  background: linear-gradient(aquamarine, coral);
+  background: linear-gradient(to bottom left, #e23b3b, #e15a5b);
   height: 100%;
   width: 100%;
   margin: 0;
@@ -19,7 +19,6 @@ body
   color: oldlace;
   background: #00000000;
   font-style: italic;
-  text-shadow: 2px 2px gainsboro;
 }
 
 input
@@ -146,45 +145,6 @@ button:focus
 
 }
 
-.activeWelcomeMessage
-{
-  position: absolute;
-  vertical-align: center;
-  width: 100%;
-  text-align: center;
-  margin: auto;
-  font-size: 5vw;
-  color: black;
-  top: 0vh;
-  animation: MoveUpDown 4s ease-in-out infinite;
-}
-
-.activeQuestionHeader
-{
-  position: absolute;
-  vertical-align: center;
-  width: 100%;
-  text-align: center;
-  margin: auto;
-  font-size: 5vw;
-  color: black;
-  top: 0vh;
-  animation: MoveUpDown 4s ease-in-out infinite;
-}
-
-.activeEndMessage
-{
-  position: absolute;
-  vertical-align: center;
-  width: 100%;
-  text-align: center;
-  margin: auto;
-  font-size: 5vw;
-  color: black;
-  top: 0vh;
-  animation: MoveUpDown 4s ease-in-out infinite;
-}
-
 #activePanel
 {
   overflow: hidden;
@@ -197,50 +157,120 @@ button:focus
   background: #00000000;
 }
 
+.activeWelcomeMessage
+{
+  position: absolute;
+  width: 70%;
+  text-align: center;
+  margin: auto;
+  font-size: 5.5vw;
+  color: white;
+  top: 25%;
+  left: 15%;
+  transform: translate(0, -50%);
+}
+
+.continueMessage
+{
+  position: absolute;
+  vertical-align: center;
+  width: 70%;
+  text-align: center;
+  margin: auto;
+  font-size: 3.5vw;
+  color: white;
+  bottom: 25%;
+  left: 15%;
+  transform: translate(0, 50%);
+}
+
+.imagePanel
+{
+  height: 100%;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.activeQuestionHeader
+{
+  font-style: normal;
+  position: absolute;
+  width: 70%;
+  text-align: center;
+  margin: auto;
+  font-size: 5.5vw;
+  color: white;
+  top: 25%;
+  left: 15%;
+  transform: translate(0, -50%);
+}
+
+.activeEndMessage
+{
+  position: absolute;
+  vertical-align: center;
+  width: 100%;
+  text-align: center;
+  margin: auto;
+  font-size: 5vw;
+  color: black;
+  top: 25%;
+  transform: translate(0, -50%);
+}
+
 .answerPanel
 {
   position: absolute;
   vertical-align: center;
-  width: 80vw;
+  width: 90%;
   margin: auto;
-  top: 50vh;
-  left: 10vw;
+  bottom: 25%;
+  left: 5%;
   display: flex;
   justify-content: space-between;
+  transform: translate(0, 50%);
 }
 
 .answerSelectButton
 {
-  vertical-align: top;
+  vertical-align: center;
 
   text-align: center;
   font-family: 'Arial Rounded MT Bold';
-  font-size: 2vw;
-  color: black;
+  font-size: 3vw;
+  color: white;
   background-color: coral;
-  border-radius: 7.5vw;
-  box-shadow: 0 2vw #999;
-  width: 15vw;
-  height: 15vw;
+  border-radius: 10vw;
+  border-width: 0.5vw;
+  border-color: #fff;
+  border-style: solid;
+  box-shadow: 0 1vw #00000077;
+  width: 17.5vw;
+  height: 17.5vw;
 }
 
 .answerSelectButton.active, .answerSelectButton:active
 {
   background-color: coral;
-  box-shadow: 0 1vw #666;
+  box-shadow: 0 0.5vw #00000077;
   color: white;
-  transform: translateY(1vw);
+  transform: translateY(0.5vw);
 }
 
 .inactiveAnswerSelectButton
 {
-  vertical-align: top;
+  vertical-align: center;
 
   background-color: lightgrey;
-  border-radius: 7.5vw;
-  box-shadow: 0 2vw #999;
-  width: 15vw;
-  height: 15vw;
+  border-radius: 10vw;
+  border-width: 0.5vw;
+  border-style: solid;
+  border-color: #fff;
+  box-shadow: 0 1vw #00000077;
+  width: 17.5vw;
+  height: 17.5vw;
 }
 
 .inactiveAnswerSelectButton.active, .inactiveAnswerSelectButton:active
@@ -260,24 +290,22 @@ button:focus
 
 @keyframes MoveRightCenter
 {
-  0%    { left: 100% }
-  25%   { left: 100%; }
+  0%   { left: 100%; }
   100%  { left: 0%; }
 }
 
 .moveRightCenter
 {
-  animation: MoveRightCenter 0.5s ease-out;
+  animation: MoveRightCenter 0.5s ease-in;
 }
 
 @keyframes MoveCenterLeft
 {
-  0%    { left: 0% }
-  25%   { left: 0%; }
+  0%   { left: 0%; }
   100%  { left: -100%; }
 }
 
 .moveCenterLeft
 {
-  animation: MoveCenterLeft 0.5s ease-in;
+  animation: MoveCenterLeft 0.5s ease-out;
 }

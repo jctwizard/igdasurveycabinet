@@ -13,6 +13,7 @@ var activeQuestionIndex = 0;
 var activeButtons = [];
 
 var buttonCount = 4;
+var buttonColours = ["#fbb14b", "#527db5", "#734f8d", "#61bf91"];
 
 var online = false;
 var runningSurvey = false;
@@ -286,6 +287,16 @@ function editSurvey(surveyIndex)
   var surveyWelcomeMessage = makeElement(editorPanel, "input", getSurvey(surveyIndex).welcomeMessage, "surveyWelcomeMessage", surveyIndex.toString());
   surveyWelcomeMessage.setAttribute("onchange", "setSurveyWelcomeMessage('" + surveyWelcomeMessage.id + "', " + surveyIndex.toString() + ")");
 
+  makeElement(editorPanel, "div", "Show Welcome Image?:", "surveyWelcomeImageLabel", surveyIndex.toString());
+  var surveyShowWelcomeImage = makeElement(editorPanel, "input", "", "surveyShowWelcomeImage", surveyIndex.toString());
+  surveyShowWelcomeImage.setAttribute("type", "checkbox");
+  surveyShowWelcomeImage.checked = getSurvey(surveyIndex).showWelcomeImage;
+  surveyShowWelcomeImage.setAttribute("onchange", "setShowWelcomeImage('" + surveyShowWelcomeImage.id + "', " + surveyIndex.toString() + ")");
+
+  makeElement(editorPanel, "div", "Welcome Image:", "surveyWelcomeImageLabel", surveyIndex.toString());
+  var surveyWelcomeImage = makeElement(editorPanel, "input", getSurvey(surveyIndex).welcomeImage, "surveyWelcomeImage", surveyIndex.toString());
+  surveyWelcomeImage.setAttribute("onchange", "setSurveyWelcomeImage('" + surveyWelcomeImage.id + "', " + surveyIndex.toString() + ")");
+
   makeElement(editorPanel, "div", "End Message:", "surveyWelcomeMessageLabel", surveyIndex.toString());
   var surveyEndMessage = makeElement(editorPanel, "input", getSurvey(surveyIndex).endMessage, "surveyEndMessage", surveyIndex.toString());
   surveyEndMessage.setAttribute("onchange", "setSurveyEndMessage('" + surveyEndMessage.id + "', " + surveyIndex.toString() + ")");
@@ -406,6 +417,16 @@ function setSurveyWelcomeMessage(elementId, surveyIndex)
   surveys["survey" + surveyIndex.toString()].welcomeMessage = document.getElementById(elementId).value;
 }
 
+function setShowWelcomeImage(elementId, surveyIndex)
+{
+  surveys["survey" + surveyIndex.toString()].showWelcomeImage = document.getElementById(elementId).checked;
+}
+
+function setSurveyWelcomeImage(elementId, surveyIndex)
+{
+  surveys["survey" + surveyIndex.toString()].welcomeImage = document.getElementById(elementId).value;
+}
+
 function setSurveyEndMessage(elementId, surveyIndex)
 {
   surveys["survey" + surveyIndex.toString()].endMessage = document.getElementById(elementId).value;
@@ -423,7 +444,7 @@ function setAnswerName(elementId, surveyIndex, questionIndex, answerIndex)
 
 function addSurvey()
 {
-  surveys["survey" + getSurveyCount().toString()] = { "surveyName":"new survey", "date":"0/0/0", "location":"Scotland", "welcomeMessage":defaultWelcomeMessage, "endMessage":defaultEndMessage, "showWelcomeMessage":false, "questions": {"question0":{"questionName":"new question", "answers":{"answer0":{"answerName":"new answer", "responses":0}}}}};
+  surveys["survey" + getSurveyCount().toString()] = { "surveyName":"new survey", "date":"0/0/0", "location":"Scotland", "welcomeMessage":defaultWelcomeMessage, "showWelcomeMessage":false, "welcomeImage":"image url", "showWelcomeImage":false, "endMessage":defaultEndMessage, "questions": {"question0":{"questionName":"new question", "answers":{"answer0":{"answerName":"new answer", "responses":0}}}}};
 
   displaySurveys();
 }
@@ -713,6 +734,8 @@ function runSurvey(surveyIndex)
 
   document.getElementById("header").style.visibility = "hidden";
 
+  document.body.style.overflow = "hidden";
+
   activeSurveyIndex = surveyIndex;
   activeQuestionIndex = 0;
 
@@ -785,6 +808,7 @@ function displayActiveQuestion()
     {
       answerSelectButton = makeElement(answerPanel, "button", getAnswerName(surveyIndex, questionIndex, buttonIndex), "answerSelectButton", buttonIndex.toString());
       answerSelectButton.setAttribute("onclick", "saveResponse(" + buttonIndex.toString() + ")");
+      answerSelectButton.style.backgroundColor = buttonColours[buttonIndex];
     }
     else
     {
@@ -830,17 +854,23 @@ function displayWelcomeMessage()
 
   var welcomeMessage = makeElement(activePanel, "div", getSurvey(activeSurveyIndex).welcomeMessage, "activeWelcomeMessage", "")
 
+  var continueMessage = makeElement(activePanel, "div", "Press me!", "continueMessage", "")
+
   var answerPanel = makeElement(activePanel, "div", "", "answerPanel", "")
+
+  if (getSurvey(activeSurveyIndex).showWelcomeImage)
+  {
+      var imagePanel = makeElement(activePanel, "div", "", "imagePanel", "");
+      imagePanel.style.backgroundImage = "url('" + getSurvey(activeSurveyIndex).welcomeImage + "')";
+  }
 
   activeButtons = [];
 
   for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
   {
-    var answerSelectButton;
-
-    answerSelectButton = makeElement(answerPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
+    var answerSelectButton = makeElement(answerPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
     answerSelectButton.setAttribute("onclick", "displayNextQuestion(true)");
-
+    answerSelectButton.style.visibility = "hidden";
     activeButtons.push(answerSelectButton);
   }
 
@@ -860,10 +890,9 @@ function displayEndMessage()
 
   for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
   {
-    var answerSelectButton;
-
-    answerSelectButton = makeElement(answerPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
+    var answerSelectButton = makeElement(answerPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
     answerSelectButton.setAttribute("onclick", "restartSurvey()");
+    answerSelectButton.style.visibility = "hidden";
 
     activeButtons.push(answerSelectButton);
   }
@@ -879,6 +908,8 @@ function exitSurvey()
   document.getElementById("activePanel").innerHTML = "";
 
   document.getElementById("header").style.visibility = "visible";
+
+  document.body.style.overflow = "visible";
 
   displaySurveys();
 }
