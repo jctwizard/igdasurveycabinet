@@ -37,8 +37,8 @@ input
 {
   font-family: arialRounded;
   font-size: 1em;
-  color: oldlace;
-  background: #00000033;
+  color: black;
+  background: #ffffff;
   font-style: italic;
 }
 
@@ -58,7 +58,7 @@ button
   background-color: white;
   border: 2px black;
   border-color: black;
-  border-width: 0.25vw;
+  border-width: 0.1vw;
   border-radius: 100px;
   border-style: solid;
 }
@@ -379,7 +379,7 @@ button:focus
 
 .moveRightCenter
 {
-  animation: MoveRightCenter 0.5s ease-out;
+  animation: MoveRightCenter 0.4s ease-out;
 }
 
 @keyframes MoveCenterLeft
@@ -390,7 +390,7 @@ button:focus
 
 .moveCenterLeft
 {
-  animation: MoveCenterLeft 0.5s ease-in;
+  animation: MoveCenterLeft 0.4s ease-in;
 }
 
 @keyframes Shrink
@@ -401,7 +401,7 @@ button:focus
 
 .shrink
 {
-  animation: Shrink 0.5s ease-in;
+  animation: Shrink 0.2s ease-in;
   animation-fill-mode: forwards;
 }
 
@@ -414,6 +414,6 @@ button:focus
 
 .grow
 {
-  animation: Grow 0.5s ease;
+  animation: Grow 0.2s ease;
   animation-fill-mode: forwards;
 }

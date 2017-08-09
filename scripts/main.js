@@ -13,8 +13,8 @@ var activeQuestionIndex = 0;
 var activeButtons = [];
 
 var buttonCount = 4;
-var defaultButtonColours = ["#fbb14b", "#527db5", "#734f8d", "#61bf91"];
-var buttonColours = ["#fbb14b", "#527db5", "#734f8d", "#61bf91"];
+var defaultButtonColours = ["fbb14b", "527db5", "734f8d", "61bf91"];
+var buttonColours = ["fbb14b", "527db5", "734f8d", "61bf91"];
 
 var online = false;
 var runningSurvey = false;
@@ -28,8 +28,8 @@ var resetSurveyTimeout = null;
 var defaultWelcomeMessage = "Take a moment to answer some questions for us? Hit any button to continue.";
 var defaultEndMessage = "Thank you for answering some questions! Hit any button to restart.";
 
-var transitionTime = 0.5 * 1000;
-var buttonShrinkTime = 0.6 * 1000;
+var transitionTime = 0.4 * 1000;
+var buttonShrinkTime = 0.3 * 1000;
 
 document.getElementById("status").innerHTML = "starting up...";
 
@@ -341,11 +341,11 @@ function editSurvey(surveyIndex)
 
   for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
   {
-    var buttonColour = makeElement(editorPanel, "input", "#000000", "buttonColour" + buttonIndex.toString(), surveyIndex.toString());
+    var buttonColour = makeElement(editorPanel, "input", "", "buttonColour" + buttonIndex.toString(), surveyIndex.toString());
     buttonColour.setAttribute("type", "color");
-    buttonColour.value = getSurvey(surveyIndex).buttonColours["button" + buttonIndex.toString()];
-    buttonColour.style.backgroundColor = buttonColour.value;
-    buttonColour.setAttribute("onchange", "setButtonColour('" + buttonColour.id + "', " + buttonIndex + "', " + surveyIndex.toString() + ")");
+    buttonColour.value = getSurvey(surveyIndex).buttonColours["button" + buttonIndex];
+    buttonColour.style.backgroundColor = "#" + buttonColour.value;
+    buttonColour.setAttribute("onchange", "setButtonColour('" + buttonColour.id + "', " + buttonIndex + ", " + surveyIndex.toString() + ")");
   }
 
   makeElement(editorPanel, "hr", "", "break", "");
@@ -463,6 +463,7 @@ function setAnswerName(elementId, surveyIndex, questionIndex, answerIndex)
 
 function setButtonColour(elementId, buttonIndex, surveyIndex)
 {
+  document.getElementById(elementId).style.backgroundColor = "#" + document.getElementById(elementId).value;
   surveys["survey" + surveyIndex.toString()].buttonColours["button" + buttonIndex.toString()] = document.getElementById(elementId).value;
 }
 
@@ -854,7 +855,7 @@ function displayActiveQuestion()
     {
       answerSelectButton = makeElement(answerPanel, "button", getAnswerName(surveyIndex, questionIndex, buttonIndex), "answerSelectButton", buttonIndex.toString());
       answerSelectButton.setAttribute("onclick", "saveResponse(" + buttonIndex.toString() + ")");
-      answerSelectButton.style.backgroundColor = buttonColours[buttonIndex];
+      answerSelectButton.style.backgroundColor = "#" + buttonColours[buttonIndex];
     }
     else
     {
