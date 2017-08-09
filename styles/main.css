@@ -61,6 +61,8 @@ button
   border-width: 0.1vw;
   border-radius: 100px;
   border-style: solid;
+  margin-left: 0.5vw;
+  margin-right: 0.5vw;
 }
 
 button:active
@@ -325,7 +327,7 @@ button:focus
 
   text-align: center;
   font-family: arialRounded;
-  font-size: 3vw;
+  font-size: 2.5vw;
   color: white;
   background-color: coral;
   border-radius: 10vw;

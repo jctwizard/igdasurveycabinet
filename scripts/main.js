@@ -32,6 +32,8 @@ var defaultContinueMessage = "Press a button!";
 var transitionTime = 0.4 * 1000;
 var buttonShrinkTime = 0.3 * 1000;
 
+var pressSound;
+
 document.getElementById("status").innerHTML = "starting up...";
 
 function init()
@@ -92,6 +94,8 @@ function init()
 
     displaySurveys();
   }
+
+  pressSound = new Howl({ src: ["sounds/press.mp3"] });
 
   if (window.addEventListener)
   {
@@ -879,6 +883,8 @@ function saveResponse(answerIndex)
 function displayNextQuestion(firstQuestion, answerIndex)
 {
   var transitionDelay = 0;
+
+  pressSound.play();
 
   if (firstQuestion == false)
   {
