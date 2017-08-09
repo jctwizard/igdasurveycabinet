@@ -367,6 +367,75 @@ button:focus
   transform: translateY(0.5vw);
 }
 
+.gameButton
+{
+  position: absolute;
+  vertical-align: center;
+
+  text-align: center;
+  font-family: arialRounded;
+  font-size: 2.5vw;
+  color: white;
+  background-color: coral;
+  border-radius: 100%;
+  border-width: 0.5vw;
+  border-color: #fff;
+  border-style: solid;
+  box-shadow: 0 1vw #00000077;
+  width: 20vw;
+  height: 20vw;
+  top: 40%;
+  left: 40%;
+}
+
+.gameGoal
+{
+  position: absolute;
+  background-color: #00000000;
+  border-radius: 100%;
+  border-width: 0.5vw;
+  border-color: #FFFFFF;
+  border-style: solid;
+  width: 20vw;
+  height: 20vw;
+  top: 40%;
+  left: 40%;
+  transform: scale(2.5);
+  animation: BorderColorShift 1s infinite ease-in-out;
+}
+
+@keyframes BorderColorShift
+{
+  0%    { border-color: #aa3300; }
+  25%   { border-color: #33aa00; }
+  50%   { border-color: #00aa33; }
+  75%   { border-color: #0033aa; }
+  100%  { border-color: #aa3300; }
+}
+
+.gameButton.active, .gameButton:active
+{
+  background-color: coral;
+  box-shadow: 0 0.5vw #00000077;
+  color: white;
+  transform: translateY(0.5vw);
+}
+
+.gameTimer
+{
+  position: absolute;
+  vertical-align: center;
+  width: 70%;
+  text-align: center;
+  margin: auto;
+  font-size: 6vw;
+  color: white;
+  top: 5%;
+  left: 15%;
+  transform: translate(0, -50%);
+  animation: Pulse 1s infinite ease-in-out;
+}
+
 @keyframes MoveUpDown
 {
   0%    { top: 30vh; }

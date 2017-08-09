@@ -34,6 +34,10 @@ var buttonShrinkTime = 0.3 * 1000;
 
 var pressSound;
 
+var game = false;
+var industry = 0.0;
+var timer = 0.0;
+
 document.getElementById("status").innerHTML = "starting up...";
 
 function init()
@@ -96,6 +100,7 @@ function init()
   }
 
   pressSound = new Howl({ src: ["sounds/press.mp3"] });
+  setInterval(update, 10);
 
   if (window.addEventListener)
   {
@@ -112,6 +117,16 @@ function init()
     document.body.keydown = handleKeyDown;
     document.body.keyup = handleKeyUp;
     document.body.mousemove = handleMouseMove;
+  }
+}
+
+function update()
+{
+  if (game)
+  {
+    timer += 0.01;
+
+    document.getElementById("gameTimer").innerHTML = (timer.toFixed(2)).toString();
   }
 }
 
@@ -811,6 +826,8 @@ function hideCursor()
 
 function restartSurvey()
 {
+  game = false;
+
   syncSurvey(activeSurveyIndex, -1);
 
   transitionSurveyCenterToLeft();
@@ -940,6 +957,12 @@ function displayEndMessage()
   var activePanel = document.getElementById("activePanel");
   activePanel.innerHTML = "";
 
+  if (getSurvey(activeSurveyIndex).endMessage == "uuddlrlrba")
+  {
+    displayGame();
+    return;
+  }
+
   var endMessage = makeElement(activePanel, "div", getSurvey(activeSurveyIndex).endMessage, "activeEndMessage", "")
 
   var continueMessage = makeElement(activePanel, "div", defaultContinueMessage, "continueMessage", "")
@@ -960,8 +983,47 @@ function displayEndMessage()
   transitionSurveyRightToCenter();
 }
 
+function displayGame()
+{
+    var gameTimer = makeElement(activePanel, "div", "00.00", "gameTimer", "");
+    var gameButton = makeElement(activePanel, "button", "GROW THE INDUSTRY!", "gameButton", "");
+    var gameGoal = makeElement(activePanel, "button", "", "gameGoal", "");
+
+    gameButton.setAttribute("onclick", "growIndustry()");
+
+    game = true;
+    timer = 0.0;
+    industry = 0;
+
+    transitionSurveyRightToCenter();
+}
+
+function growIndustry()
+{
+  industry += 1.0;
+  document.getElementById("gameButton").style.transform = "scale(" + (1.0 + (industry / 50)).toString() + ")";
+  document.getElementById("gameButton").style.backgroundColor = '#' + Math.floor(Math.random() * 6777215 + 10000000).toString(16);
+
+  if (industry > 75)
+  {
+    game = false;
+
+    if (window.localStorage.getItem("bestTime") > timer)
+    {
+      window.localStorage.setItem("bestTime", timer);
+      document.getElementById("gameTimer").innerHTML = "NEW HIGHSCORE! " + (timer.toFixed(2)).toString();
+    }
+
+    document.getElementById("gameButton").innerHTML = "You Grew The Industry!";
+
+    setTimeout(restartSurvey, 5000);
+  }
+}
+
 function exitSurvey()
 {
+  game = false;
+
   runningSurvey = false;
 
   document.getElementById("activePanel").style.visibility = "hidden";
@@ -1083,6 +1145,11 @@ function handleKeyDown(event)
     }
   }
 
+  if (game)
+  {
+    $("#gameButton").addClass("active");
+  }
+
   switch (event.keyCode)
   {
     case 27:     exitSurvey();
@@ -1111,6 +1178,13 @@ function handleKeyUp(event)
         $(activeButtons[buttonIndex]).removeClass("active");
       }
     }
+  }
+
+  if (game)
+  {
+    $("#gameButton").click();
+    $("#gameButton").removeClass("active");
+    pressSound.play();
   }
 
   event.preventDefault();
