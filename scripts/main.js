@@ -1008,7 +1008,7 @@ function growIndustry()
   {
     game = false;
 
-    if (window.localStorage.getItem("bestTime") > timer)
+    if (window.localStorage.getItem("bestTime") == null || window.localStorage.getItem("bestTime") > timer)
     {
       window.localStorage.setItem("bestTime", timer);
       document.getElementById("gameTimer").innerHTML = "NEW HIGHSCORE! " + (timer.toFixed(2)).toString();
