@@ -402,6 +402,7 @@ button:focus
   left: 40%;
   transform: scale(2.5);
   animation: BorderColorShift 1s infinite ease-in-out;
+  z-index: -1000;
 }
 
 @keyframes BorderColorShift
