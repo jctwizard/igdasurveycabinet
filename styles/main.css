@@ -25,23 +25,21 @@ body
   height: 100%;
   width: 100%;
   margin: 0;
+  margin-left: 2vw;
   padding: 0;
   font-family: arialRounded;
   font-size: 1em;
-  color: oldlace;
+  color: white;
   background: #00000000;
-  font-style: italic;
 }
 
 input
 {
   font-family: arialRounded;
-  font-size: 2em;
+  font-size: 1em;
   color: oldlace;
   background: #00000033;
   font-style: italic;
-  text-shadow: 2px 2px gainsboro;
-  width: 50%;
 }
 
 #editorPanel
@@ -59,9 +57,10 @@ button
   background: #00000000;
   background-color: white;
   border: 2px black;
-  border-color: white;
-  border-width: 2px;
+  border-color: black;
+  border-width: 0.25vw;
   border-radius: 100px;
+  border-style: solid;
 }
 
 button:active
@@ -75,9 +74,31 @@ button:focus
   outline: 0;
 }
 
+.exportLink
+{
+  font-family: arialRounded;
+  font-size: 1em;
+  color: black;
+  background: #00000000;
+  background-color: white;
+  border: 2px black;
+  border-color: black;
+  border-width: 0.25vw;
+  border-radius: 100px;
+  border-style: solid;
+  padding: 0.25vw;
+}
+
 .surveyRow
 {
 
+}
+
+.fieldHeader
+{
+  font-size: 1.5em;
+  margin-top: 2vw;
+  text-decoration: underline;
 }
 
 .surveyTitle
@@ -140,6 +161,11 @@ button:focus
   padding: 0.5em;
 }
 
+.answerPanel
+{
+
+}
+
 .answerRow
 {
 
@@ -154,6 +180,53 @@ button:focus
 .questionSaveButton
 {
 
+}
+
+.surveyResultsHeader
+{
+  font-size: 2.5em;
+  text-decoration: underline;
+  margin-bottom: 2vw;
+}
+
+.totalResultsResponsesHeader
+{
+  font-size: 1.5em;
+  margin-right: 2vw;
+}
+
+.totalResultsResponses
+{
+  font-size: 1.5em;
+}
+
+.answerResultsResponses
+{
+  font-size: 1.5em;
+  float: right;
+  margin-right: 4vw;
+}
+
+.questionResultsTitle
+{
+  margin-top: 2vw;
+  font-size: 2em;
+  text-decoration: underline;
+}
+
+.answerResultsTitle
+{
+  font-size: 1.5em;
+}
+
+.surveyResultsLocation
+{
+  font-size: 1.5em;
+}
+
+.surveyResultsDate
+{
+  font-size: 1.5em;
 }
 
 #activePanel
@@ -176,7 +249,7 @@ button:focus
   margin: auto;
   font-size: 5.5vw;
   color: white;
-  top: 25%;
+  top: 50%;
   left: 15%;
   transform: translate(0, -50%);
 }
@@ -222,16 +295,17 @@ button:focus
 {
   position: absolute;
   vertical-align: center;
-  width: 100%;
+  width: 70%;
   text-align: center;
   margin: auto;
-  font-size: 5vw;
-  color: black;
-  top: 25%;
+  font-size: 5.5vw;
+  color: white;
+  top: 50%;
+  left: 15%;
   transform: translate(0, -50%);
 }
 
-.answerPanel
+.activeAnswerPanel
 {
   position: absolute;
   vertical-align: center;
