@@ -28,6 +28,7 @@ var defaultWelcomeMessage = "Take a moment to answer some questions for us? Hit 
 var defaultEndMessage = "Thank you for answering some questions! Hit any button to restart.";
 
 var transitionTime = 0.5 * 1000;
+var buttonShrinkTime = 0.6 * 1000;
 
 document.getElementById("status").innerHTML = "starting up...";
 
@@ -723,6 +724,21 @@ function transitionSurveyCenterToLeft()
   document.getElementById("activePanel").classList.add("moveCenterLeft");
 }
 
+function shrinkButtons(answerIndex)
+{
+  for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
+  {
+    if (buttonIndex == answerIndex)
+    {
+      activeButtons[buttonIndex].classList.add("grow");
+    }
+    else
+    {
+      activeButtons[buttonIndex].classList.add("shrink");
+    }
+  }
+}
+
 function runSurvey(surveyIndex)
 {
   document.getElementById("editorPanel").innerHTML = "";
@@ -825,25 +841,29 @@ function saveResponse(answerIndex)
 {
   surveys["survey" + activeSurveyIndex.toString()].questions["question" + activeQuestionIndex.toString()].answers["answer" + answerIndex.toString()].responses += 1;
 
-  displayNextQuestion();
+  displayNextQuestion(false, answerIndex);
 }
 
-function displayNextQuestion(firstQuestion)
+function displayNextQuestion(firstQuestion, answerIndex)
 {
-  if (firstQuestion != true)
+  var transitionDelay = 0;
+
+  if (firstQuestion == false)
   {
     activeQuestionIndex += 1;
+    shrinkButtons(answerIndex);
+    transitionDelay = buttonShrinkTime;
   }
 
-  transitionSurveyCenterToLeft();
+  setTimeout(transitionSurveyCenterToLeft, transitionDelay);
 
   if (activeQuestionIndex >= getQuestionCount(activeSurveyIndex))
   {
-    setTimeout(displayEndMessage, transitionTime);
+    setTimeout(displayEndMessage, transitionTime + transitionDelay);
   }
   else
   {
-    setTimeout(displayActiveQuestion, transitionTime);
+    setTimeout(displayActiveQuestion, transitionTime + transitionDelay);
   }
 }
 
@@ -869,7 +889,7 @@ function displayWelcomeMessage()
   for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
   {
     var answerSelectButton = makeElement(answerPanel, "button", "", "inactiveAnswerSelectButton", buttonIndex.toString());
-    answerSelectButton.setAttribute("onclick", "displayNextQuestion(true)");
+    answerSelectButton.setAttribute("onclick", "displayNextQuestion(true, 0)");
     answerSelectButton.style.visibility = "hidden";
     activeButtons.push(answerSelectButton);
   }

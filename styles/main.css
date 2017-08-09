@@ -35,7 +35,7 @@ body
 
 input
 {
-  font-family: 'Arial Rounded MT Bold', sans-serif;
+  font-family: 'Arial Rounded MT Bold', arialRounded, sans-serif;
   font-size: 2em;
   color: oldlace;
   background: #00000033;
@@ -53,22 +53,21 @@ input
 
 button
 {
-  font-family: 'Arial Rounded MT Bold', sans-serif;
+  font-family: 'Arial Rounded MT Bold', arialRounded, sans-serif;
   font-size: 1em;
-  color: oldlace;
+  color: black;
   background: #00000000;
-  background-color: coral;
+  background-color: white;
   border: 2px black;
+  border-color: white;
+  border-width: 2px;
   border-radius: 100px;
-  box-shadow: 0 5px #999;
 }
 
 button:active
 {
-  background-color: coral;
-  box-shadow: 0 2px #666;
-  color: white;
-  transform: translateY(3px);
+  background-color: lightgray;
+  color: black;
 }
 
 button:focus
@@ -250,7 +249,7 @@ button:focus
   vertical-align: center;
 
   text-align: center;
-  font-family: 'Arial Rounded MT Bold';
+  font-family: 'Arial Rounded MT Bold', arialRounded, sans-serif;
   font-size: 3vw;
   color: white;
   background-color: coral;
@@ -308,7 +307,7 @@ button:focus
 
 .moveRightCenter
 {
-  animation: MoveRightCenter 0.5s ease-in;
+  animation: MoveRightCenter 0.5s ease-out;
 }
 
 @keyframes MoveCenterLeft
@@ -319,5 +318,30 @@ button:focus
 
 .moveCenterLeft
 {
-  animation: MoveCenterLeft 0.5s ease-out;
+  animation: MoveCenterLeft 0.5s ease-in;
+}
+
+@keyframes Shrink
+{
+  0%   { transform: scale(1.0); }
+  100%  { transform: scale(0.0); }
+}
+
+.shrink
+{
+  animation: Shrink 0.5s ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes Grow
+{
+  0%   { transform: scale(1.0); }
+  50%   { transform: scale(1.3); }
+  100%  { transform: scale(1.3); }
+}
+
+.grow
+{
+  animation: Grow 0.5s ease-out;
+  animation-fill-mode: forwards;
 }
