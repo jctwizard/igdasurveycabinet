@@ -13,6 +13,7 @@ var activeQuestionIndex = 0;
 var activeButtons = [];
 
 var buttonCount = 4;
+var defaultButtonColours = ["#fbb14b", "#527db5", "#734f8d", "#61bf91"];
 var buttonColours = ["#fbb14b", "#527db5", "#734f8d", "#61bf91"];
 
 var online = false;
@@ -336,6 +337,17 @@ function editSurvey(surveyIndex)
   var surveyEndMessage = makeElement(editorPanel, "input", getSurvey(surveyIndex).endMessage, "surveyEndMessage", surveyIndex.toString());
   surveyEndMessage.setAttribute("onchange", "setSurveyEndMessage('" + surveyEndMessage.id + "', " + surveyIndex.toString() + ")");
 
+  makeElement(editorPanel, "div", "Button colours:", "fieldHeader", surveyIndex.toString());
+
+  for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
+  {
+    var buttonColour = makeElement(editorPanel, "input", "#000000", "buttonColour" + buttonIndex.toString(), surveyIndex.toString());
+    buttonColour.setAttribute("type", "color");
+    buttonColour.value = getSurvey(surveyIndex).buttonColours["button" + buttonIndex.toString()];
+    buttonColour.style.backgroundColor = buttonColour.value;
+    buttonColour.setAttribute("onchange", "setButtonColour('" + buttonColour.id + "', " + buttonIndex + "', " + surveyIndex.toString() + ")");
+  }
+
   makeElement(editorPanel, "hr", "", "break", "");
 
   var surveySaveButton = makeElement(editorPanel, "button", "save survey", "surveySaveButton", surveyIndex.toString());
@@ -449,9 +461,16 @@ function setAnswerName(elementId, surveyIndex, questionIndex, answerIndex)
   surveys["survey" + surveyIndex.toString()].questions["question" + questionIndex.toString()].answers["answer" + answerIndex.toString()].answerName = document.getElementById(elementId).value;
 }
 
+function setButtonColour(elementId, buttonIndex, surveyIndex)
+{
+  surveys["survey" + surveyIndex.toString()].buttonColours["button" + buttonIndex.toString()] = document.getElementById(elementId).value;
+}
+
 function addSurvey()
 {
-  surveys["survey" + getSurveyCount().toString()] = { "surveyName":"new survey", "date":"0/0/0", "location":"Scotland", "welcomeMessage":defaultWelcomeMessage, "showWelcomeMessage":false, "welcomeImage":"image url", "showWelcomeImage":false, "endMessage":defaultEndMessage, "questions": {"question0":{"questionName":"new question", "answers":{"answer0":{"answerName":"new answer", "responses":0}}}}};
+  console.log(surveys);
+
+  surveys["survey" + getSurveyCount().toString()] = { "surveyName":"new survey", "date":"0/0/0", "location":"Scotland", "buttonColours":{"button0":defaultButtonColours[0], "button1":defaultButtonColours[1], "button2":defaultButtonColours[2], "button3":defaultButtonColours[3]}, "welcomeMessage":defaultWelcomeMessage, "showWelcomeMessage":false, "welcomeImage":"image url", "showWelcomeImage":false, "endMessage":defaultEndMessage, "questions": {"question0":{"questionName":"new question", "answers":{"answer0":{"answerName":"new answer", "responses":0}}}}};
 
   displaySurveys();
 }
@@ -760,6 +779,11 @@ function runSurvey(surveyIndex)
 
   activeSurveyIndex = surveyIndex;
   activeQuestionIndex = 0;
+
+  for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++)
+  {
+    buttonColours[buttonIndex] = getSurvey(surveyIndex).buttonColours["button" + buttonIndex.toString()];
+  }
 
   restartSurveyTimeout();
   restartCursorTimeout();

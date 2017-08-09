@@ -360,10 +360,8 @@ button:focus
 
 .inactiveAnswerSelectButton.active, .inactiveAnswerSelectButton:active
 {
-  background-color: grey;
-  box-shadow: 0 1vw #666;
-  color: white;
-  transform: translateY(1vw);
+  box-shadow: 0 0.5vw #00000077;
+  transform: translateY(0.5vw);
 }
 
 @keyframes MoveUpDown
