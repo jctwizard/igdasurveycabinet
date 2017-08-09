@@ -27,6 +27,7 @@ var resetSurveyTimeout = null;
 
 var defaultWelcomeMessage = "Take a moment to answer some questions for us? Hit any button to continue.";
 var defaultEndMessage = "Thank you for answering some questions! Hit any button to restart.";
+var defaultContinueMessage = "Press a button!";
 
 var transitionTime = 0.4 * 1000;
 var buttonShrinkTime = 0.3 * 1000;
@@ -905,7 +906,7 @@ function displayWelcomeMessage()
 
   var welcomeMessage = makeElement(activePanel, "div", getSurvey(activeSurveyIndex).welcomeMessage, "activeWelcomeMessage", "")
 
-  var continueMessage = makeElement(activePanel, "div", "Press me!", "continueMessage", "")
+  var continueMessage = makeElement(activePanel, "div", defaultContinueMessage, "continueMessage", "")
 
   var answerPanel = makeElement(activePanel, "div", "", "activeAnswerPanel", "")
 
@@ -935,7 +936,7 @@ function displayEndMessage()
 
   var endMessage = makeElement(activePanel, "div", getSurvey(activeSurveyIndex).endMessage, "activeEndMessage", "")
 
-  var continueMessage = makeElement(activePanel, "div", "Press me!", "continueMessage", "")
+  var continueMessage = makeElement(activePanel, "div", defaultContinueMessage, "continueMessage", "")
 
   var answerPanel = makeElement(activePanel, "div", "", "activeAnswerPanel", "")
 
