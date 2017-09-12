@@ -61,7 +61,7 @@ function init()
 
     if (window.localStorage.getItem("syncRequired") == "true")
     {
-      console.log("syncing");
+      syncLocalSurveys();
     }
 
     // Read survey data
@@ -118,6 +118,90 @@ function init()
     document.body.keydown = handleKeyDown;
     document.body.keyup = handleKeyUp;
     document.body.mousemove = handleMouseMove;
+  }
+}
+
+function syncSurvey(surveyIndex, questionIndex)
+{
+  if (online)
+  {
+    if (surveyIndex == -1)
+    {
+      storeAllOnline();
+    }
+    else if (questionIndex == -1)
+    {
+      storeSurveyOnline(surveyIndex);
+    }
+    else
+    {
+      storeQuestionOnline(surveyIndex, questionIndex);
+    }
+  }
+  else
+  {
+    window.localStorage.setItem("syncRequired", "true");
+    storeSurveysOffline();
+    alert("Not connected to database, syncing offline. Connect later to sync online.");
+  }
+}
+
+function syncLocalSurveys()
+{
+  if (isJsonString(window.localStorage.getItem("surveys")))
+  {
+    firebase.database().ref('surveys').set(JSON.parse(window.localStorage.getItem("surveys")));
+    alert("Successfuly synced from local storage.");
+  }
+  else
+  {
+    alert("Error when reading from local storage during sync.");
+  }
+
+  window.localStorage.setItem("syncRequired", "false");
+}
+
+function storeAllOnline()
+{
+  firebase.database().ref('surveys').set(getSurveys());
+}
+
+function storeSurveyOnline(surveyIndex)
+{
+  firebase.database().ref('surveys/survey' + surveyIndex.toString()).set(getSurveys()["survey" + surveyIndex.toString()]);
+}
+
+function storeQuestionOnline(surveyIndex, questionIndex)
+{
+  firebase.database().ref('surveys/survey' + surveyIndex.toString() + "/questions/question" + questionIndex.toString()).set(getQuestions(surveyIndex)["question" + questionIndex.toString()]);
+}
+
+function storeSurveysOffline()
+{
+  if (surveys != undefined)
+  {
+    window.localStorage.setItem("surveys", JSON.stringify(surveys));
+  }
+}
+
+function goOnline()
+{
+  if (online == false)
+  {
+    online = true;
+
+    if (window.localStorage.getItem("syncRequired") == "true")
+    {
+      syncLocalSurveys();
+    }
+  }
+}
+
+function goOffline()
+{
+  if (online == true)
+  {
+    online = false;
   }
 }
 
@@ -673,90 +757,6 @@ function saveQuestion(surveyIndex, questionIndex)
   syncSurvey(surveyIndex, questionIndex);
 
   editSurvey(surveyIndex);
-}
-
-function syncSurvey(surveyIndex, questionIndex)
-{
-  if (online)
-  {
-    if (surveyIndex == -1)
-    {
-      storeAllOnline();
-    }
-    else if (questionIndex == -1)
-    {
-      storeSurveyOnline(surveyIndex);
-    }
-    else
-    {
-      storeQuestionOnline(surveyIndex, questionIndex);
-    }
-  }
-  else
-  {
-    window.localStorage.setItem("syncRequired", "true");
-    storeSurveysOffline();
-    alert("Not connected to database, syncing offline. Connect later to sync online.");
-  }
-}
-
-function syncLocalSurveys()
-{
-  if (isJsonString(window.localStorage.getItem("surveys")))
-  {
-    firebase.database().ref('surveys').set(JSON.parse(window.localStorage.getItem("surveys")));
-    alert("Successfuly synced from local storage.");
-  }
-  else
-  {
-    alert("Error when reading from local storage during sync.");
-  }
-
-  window.localStorage.setItem("syncRequired", "false");
-}
-
-function storeAllOnline()
-{
-  firebase.database().ref('surveys').set(getSurveys());
-}
-
-function storeSurveyOnline(surveyIndex)
-{
-  firebase.database().ref('surveys/survey' + surveyIndex.toString()).set(getSurveys()["survey" + surveyIndex.toString()]);
-}
-
-function storeQuestionOnline(surveyIndex, questionIndex)
-{
-  firebase.database().ref('surveys/survey' + surveyIndex.toString() + "/questions/question" + questionIndex.toString()).set(getQuestions(surveyIndex)["question" + questionIndex.toString()]);
-}
-
-function storeSurveysOffline()
-{
-  if (surveys != undefined)
-  {
-    window.localStorage.setItem("surveys", JSON.stringify(surveys));
-  }
-}
-
-function goOnline()
-{
-  if (online == false)
-  {
-    online = true;
-
-    if (window.localStorage.getItem("syncRequired") == "true")
-    {
-      syncLocalSurveys();
-    }
-  }
-}
-
-function goOffline()
-{
-  if (online == true)
-  {
-    online = false;
-  }
 }
 
 function transitionSurveyRightToCenter()
