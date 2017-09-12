@@ -18,6 +18,7 @@ var buttonColours = ["fbb14b", "527db5", "734f8d", "61bf91"];
 
 var online = false;
 var runningSurvey = false;
+var displayingWelcomeMessage = false;
 
 var hideCursorDelay = 10;
 var hideCursorTimeout = null;
@@ -826,11 +827,17 @@ function hideCursor()
 
 function restartSurvey()
 {
-  game = false;
+  if (displayingWelcomeMessage != true)
+  {
+    if (activeQuestionIndex > 0)
+    {
+      game = false;
 
-  syncSurvey(activeSurveyIndex, -1);
+      syncSurvey(activeSurveyIndex, -1);
 
-  transitionSurveyCenterToLeft();
+      transitionSurveyCenterToLeft();
+    }
+  }
 
   setTimeout(runSurvey, transitionTime, activeSurveyIndex);
 }
@@ -899,6 +906,8 @@ function saveResponse(answerIndex)
 
 function displayNextQuestion(firstQuestion, answerIndex)
 {
+  displayingWelcomeMessage = false;
+
   var transitionDelay = 0;
 
   pressSound.play();
@@ -924,6 +933,8 @@ function displayNextQuestion(firstQuestion, answerIndex)
 
 function displayWelcomeMessage()
 {
+  displayingWelcomeMessage = true;
+
   var activePanel = document.getElementById("activePanel");
   activePanel.innerHTML = "";
 
