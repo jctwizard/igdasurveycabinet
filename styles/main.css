@@ -8,7 +8,7 @@ html
 {
   background: linear-gradient(130deg, #e23b3b, #e15a5b, #B75693);
   background-size: 200% 200%;
-  animation: moveBackground 10s ease infinite;
+  /*animation: moveBackground 10s ease infinite;*/
   height: 100%;
   width: 100%;
   margin: 0;
