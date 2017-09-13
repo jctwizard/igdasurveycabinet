@@ -832,7 +832,7 @@ function restartSurvey()
 {
   var showWelcomeMessage = getSurvey(activeSurveyIndex).showWelcomeMessage;
 
-  if ((showWelcomeMessagee && !displayingWelcomeMessage) || (!showWelcomeMessage && activeQuestionIndex > 0))
+  if ((showWelcomeMessage && !displayingWelcomeMessage) || (!showWelcomeMessage && activeQuestionIndex > 0))
   {
       displayingEndMessage = false;
       displayingWelcomeMessage = false;
