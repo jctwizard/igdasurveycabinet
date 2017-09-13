@@ -467,7 +467,7 @@ hr
 
 .moveRightCenter
 {
-  animation: MoveRightCenter 0.4s ease-out;
+  animation: MoveRightCenter 0.5s ease-out;
 }
 
 @keyframes MoveCenterLeft
@@ -478,7 +478,7 @@ hr
 
 .moveCenterLeft
 {
-  animation: MoveCenterLeft 0.4s ease-in;
+  animation: MoveCenterLeft 0.5s ease-in;
 }
 
 @keyframes Shrink
@@ -489,7 +489,7 @@ hr
 
 .shrink
 {
-  animation: Shrink 0.2s ease-in;
+  animation: Shrink 0.3s ease-in;
   animation-fill-mode: forwards;
 }
 
@@ -502,6 +502,6 @@ hr
 
 .grow
 {
-  animation: Grow 0.2s ease;
+  animation: Grow 0.3s ease;
   animation-fill-mode: forwards;
 }

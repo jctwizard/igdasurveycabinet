@@ -19,8 +19,9 @@ var buttonColours = ["fbb14b", "527db5", "734f8d", "61bf91"];
 var online = false;
 var runningSurvey = false;
 var displayingWelcomeMessage = false;
+var displayingEndMessage = false;
 
-var hideCursorDelay = 10;
+var hideCursorDelay = 5;
 var hideCursorTimeout = null;
 
 var resetSurveyDelay = 60;
@@ -30,8 +31,8 @@ var defaultWelcomeMessage = "Take a moment to answer some questions for us? Hit 
 var defaultEndMessage = "Thank you for answering some questions! Hit any button to restart.";
 var defaultContinueMessage = "Press a button!";
 
-var transitionTime = 0.4 * 1000;
-var buttonShrinkTime = 0.3 * 1000;
+var transitionTime = 0.5 * 1000;
+var buttonShrinkTime = 0.4 * 1000;
 
 var pressSound;
 
@@ -109,6 +110,7 @@ function init()
     window.addEventListener("offline", goOffline, false);
     window.addEventListener("keydown", handleKeyDown, false);
     window.addEventListener("keyup", handleKeyUp, false);
+    window.addEventListener("mousedown", handleMouseDown, false);
     window.addEventListener("mousemove", handleMouseMove, false);
   }
   else
@@ -117,6 +119,7 @@ function init()
     document.body.onoffline = goOffline;
     document.body.keydown = handleKeyDown;
     document.body.keyup = handleKeyUp;
+    document.body.mousedown = handleMouseDown;
     document.body.mousemove = handleMouseMove;
   }
 }
@@ -142,7 +145,7 @@ function syncSurvey(surveyIndex, questionIndex)
   {
     window.localStorage.setItem("syncRequired", "true");
     storeSurveysOffline();
-    alert("Not connected to database, syncing offline. Connect later to sync online.");
+    //alert("Not connected to database, syncing offline. Connect later to sync online.");
   }
 }
 
@@ -434,7 +437,7 @@ function editSurvey(surveyIndex)
   surveyShowWelcomeImage.checked = getSurvey(surveyIndex).showWelcomeImage;
   surveyShowWelcomeImage.setAttribute("onchange", "setShowWelcomeImage('" + surveyShowWelcomeImage.id + "', " + surveyIndex.toString() + ")");
 
-  makeElement(editorPanel, "div", "Welcome Image:", "fieldHeader", surveyIndex.toString());
+  makeElement(editorPanel, "div", "Welcome Image URL:", "fieldHeader", surveyIndex.toString());
   var surveyWelcomeImage = makeElement(editorPanel, "input", getSurvey(surveyIndex).welcomeImage, "surveyWelcomeImage", surveyIndex.toString());
   surveyWelcomeImage.setAttribute("onchange", "setSurveyWelcomeImage('" + surveyWelcomeImage.id + "', " + surveyIndex.toString() + ")");
 
@@ -576,7 +579,7 @@ function addSurvey()
 {
   console.log(surveys);
 
-  surveys["survey" + getSurveyCount().toString()] = { "surveyName":"new survey", "date":"0/0/0", "location":"Scotland", "buttonColours":{"button0":defaultButtonColours[0], "button1":defaultButtonColours[1], "button2":defaultButtonColours[2], "button3":defaultButtonColours[3]}, "welcomeMessage":defaultWelcomeMessage, "showWelcomeMessage":false, "welcomeImage":"image url", "showWelcomeImage":false, "endMessage":defaultEndMessage, "questions": {"question0":{"questionName":"new question", "answers":{"answer0":{"answerName":"new answer", "responses":0}}}}};
+  surveys["survey" + getSurveyCount().toString()] = { "surveyName":"new survey", "date":"0/0/0", "location":"Scotland", "buttonColours":{"button0":defaultButtonColours[0], "button1":defaultButtonColours[1], "button2":defaultButtonColours[2], "button3":defaultButtonColours[3]}, "welcomeMessage":defaultWelcomeMessage, "showWelcomeMessage":false, "welcomeImage":"images/default-background.jpg", "showWelcomeImage":false, "endMessage":defaultEndMessage, "questions": {"question0":{"questionName":"new question", "answers":{"answer0":{"answerName":"new answer", "responses":0}}}}};
 
   displaySurveys();
 }
@@ -827,19 +830,21 @@ function hideCursor()
 
 function restartSurvey()
 {
-  if (displayingWelcomeMessage != true)
+  var showWelcomeMessage = getSurvey(activeSurveyIndex).showWelcomeMessage;
+
+  if ((showWelcomeMessagee && !displayingWelcomeMessage) || (!showWelcomeMessage && activeQuestionIndex > 0))
   {
-    if (activeQuestionIndex > 0)
-    {
+      displayingEndMessage = false;
+      displayingWelcomeMessage = false;
+
       game = false;
 
       syncSurvey(activeSurveyIndex, -1);
 
       transitionSurveyCenterToLeft();
-    }
-  }
 
-  setTimeout(runSurvey, transitionTime, activeSurveyIndex);
+      setTimeout(runSurvey, transitionTime, activeSurveyIndex);
+  }
 }
 
 function restartSurveyTimeout()
@@ -965,6 +970,8 @@ function displayWelcomeMessage()
 
 function displayEndMessage()
 {
+  displayingEndMessage = true;
+
   var activePanel = document.getElementById("activePanel");
   activePanel.innerHTML = "";
 
@@ -1204,6 +1211,17 @@ function handleKeyUp(event)
 function output(msg)
 {
   console.log(msg);
+}
+
+function handleMouseDown()
+{
+  if (runningSurvey)
+  {
+    if (displayingWelcomeMessage || displayingEndMessage)
+    {
+      $(activeButtons[0]).click();
+    }
+  }
 }
 
 function handleMouseMove()
