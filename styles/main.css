@@ -23,7 +23,7 @@ html
 
 body
 {
-  height: auto;
+  height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -46,7 +46,7 @@ input
 {
   overflow: scroll;
   width: 100%;
-  height: 80%;
+  height: 100%;
   padding-left: 2vw;
   padding-bottom: 2vw;
 }
