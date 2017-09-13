@@ -42,6 +42,11 @@ input
   font-style: italic;
 }
 
+#header
+{
+  padding-left: 2vw;
+}
+
 #editorPanel
 {
   overflow: scroll;
