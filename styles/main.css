@@ -46,9 +46,9 @@ input
 {
   overflow: scroll;
   width: 100%;
-  height: 100%;
+  height: 80%;
   padding-left: 2vw;
-  padding-bottom: 2vw;
+  padding-bottom: 10vw;
 }
 
 button
