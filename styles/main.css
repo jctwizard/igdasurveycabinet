@@ -30,7 +30,6 @@ body
   font-family: arialRounded;
   font-size: 1em;
   color: white;
-  background: #00000000;
 }
 
 input
@@ -61,7 +60,6 @@ button
   font-family: arialRounded;
   font-size: 1em;
   color: black;
-  background: #00000000;
   background-color: white;
   border: 2px black;
   border-color: black;
@@ -88,7 +86,6 @@ button:focus
   font-family: arialRounded;
   font-size: 1em;
   color: black;
-  background: #00000000;
   background-color: white;
   border: 2px black;
   border-color: black;
@@ -253,7 +250,6 @@ hr
   width: 100%;
   height: 100%;
   visibility: hidden;
-  background: #00000000;
 }
 
 .activeWelcomeMessage
@@ -345,9 +341,9 @@ hr
   background-color: coral;
   border-radius: 10vw;
   border-width: 0.5vw;
-  border-color: #fff;
+  border-color: #FFFFFF;
   border-style: solid;
-  box-shadow: 0 1vw #00000077;
+  box-shadow: 0 1vw #663333;
   width: 17.5vw;
   height: 17.5vw;
 }
@@ -355,7 +351,7 @@ hr
 .answerSelectButton.active, .answerSelectButton:active
 {
   background-color: coral;
-  box-shadow: 0 0.5vw #00000077;
+  box-shadow: 0 0.5vw #663333;
   color: white;
   transform: translateY(0.5vw);
 }
@@ -368,15 +364,15 @@ hr
   border-radius: 10vw;
   border-width: 0.5vw;
   border-style: solid;
-  border-color: #fff;
-  box-shadow: 0 1vw #00000077;
+  border-color: #FFFFFF;
+  box-shadow: 0 1vw #663333;
   width: 17.5vw;
   height: 17.5vw;
 }
 
 .inactiveAnswerSelectButton.active, .inactiveAnswerSelectButton:active
 {
-  box-shadow: 0 0.5vw #00000077;
+  box-shadow: 0 0.5vw #663333;
   transform: translateY(0.5vw);
 }
 
@@ -392,7 +388,7 @@ hr
   background-color: coral;
   border-radius: 100%;
   border-width: 0.5vw;
-  border-color: #fff;
+  border-color: #FFFFFF;
   border-style: solid;
   box-shadow: 0 0;
   width: 20vw;
@@ -405,7 +401,6 @@ hr
 .gameGoal
 {
   position: absolute;
-  background-color: #00000000;
   border-radius: 100%;
   border-width: 0.5vw;
   border-color: #FFFFFF;
@@ -452,9 +447,9 @@ hr
 
 @keyframes MoveUpDown
 {
-  0%    { top: 30vh; }
-  50%   { top: 32vh; }
-  100%  { top: 30vh; }
+  0%    { transform: translateY(30vh); }
+  50%   { transform: translateY(32vh); }
+  100%  { transform: translateY(30vh); }
 }
 
 @keyframes Pulse
@@ -466,24 +461,28 @@ hr
 
 @keyframes MoveRightCenter
 {
-  0%   { left: 100%; }
-  100%  { left: 0%; }
+  0%   { transform: translateX(100vw); }
+  100%  { transform: translateX(0vw); }
 }
 
 .moveRightCenter
 {
+  will-change: transform;
   animation: MoveRightCenter 0.5s ease-out;
+  animation-fill-mode: forwards;
 }
 
 @keyframes MoveCenterLeft
 {
-  0%   { left: 0%; }
-  100%  { left: -100%; }
+  0%   { transform: translateX(0vw); }
+  100%  { transform: translateX(-100vw); }
 }
 
 .moveCenterLeft
 {
+  will-change: transform;
   animation: MoveCenterLeft 0.5s ease-in;
+  animation-fill-mode: forwards;
 }
 
 @keyframes Shrink
@@ -494,6 +493,7 @@ hr
 
 .shrink
 {
+  will-change: transform;
   animation: Shrink 0.3s ease-in;
   animation-fill-mode: forwards;
 }
@@ -507,6 +507,7 @@ hr
 
 .grow
 {
+  will-change: transform;
   animation: Grow 0.3s ease;
   animation-fill-mode: forwards;
 }
