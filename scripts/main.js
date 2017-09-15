@@ -102,7 +102,7 @@ function init()
   }
 
   pressSound = new Howl({ src: ["sounds/press.mp3"] });
-  setInterval(update, 10);
+  //setInterval(update, 10);
 
   if (window.addEventListener)
   {
